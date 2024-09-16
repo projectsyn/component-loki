@@ -12,13 +12,11 @@ data:
     \ \"$http_referer\" '\n        '\"$http_user_agent\" \"$http_x_forwarded_for\"\
     ';\n  access_log   /dev/stderr  main;\n\n  sendfile     on;\n  tcp_nopush   on;\n\
     \  resolver dns-default.openshift-dns.svc.cluster.local.;\n  \n\n  server {\n\
-    \    listen             8080;\n    listen             [::]:8080;\n    auth_basic\
-    \           \"Loki\";\n    auth_basic_user_file /etc/nginx/secrets/.htpasswd;\n\
-    \n    location = / {\n      return 200 'OK';\n      auth_basic off;\n    }\n\n\
-    \    ########################################################\n    # Configure\
-    \ backend targets# Distributor\n    location = /api/prom/push {\n      proxy_pass\
-    \       http://loki-write.syn-loki.svc.cluster.local:3100$request_uri;\n    }\n\
-    \    location = /loki/api/v1/push {\n      proxy_pass       http://loki-write.syn-loki.svc.cluster.local:3100$request_uri;\n\
+    \    listen             8080;\n    listen             [::]:8080;\n\n    location\
+    \ = / {\n      return 200 'OK';\n      auth_basic off;\n    }\n\n    ########################################################\n\
+    \    # Configure backend targets# Distributor\n    location = /api/prom/push {\n\
+    \      proxy_pass       http://loki-write.syn-loki.svc.cluster.local:3100$request_uri;\n\
+    \    }\n    location = /loki/api/v1/push {\n      proxy_pass       http://loki-write.syn-loki.svc.cluster.local:3100$request_uri;\n\
     \    }\n    location = /distributor/ring {\n      proxy_pass       http://loki-write.syn-loki.svc.cluster.local:3100$request_uri;\n\
     \    }\n    location = /otlp/v1/logs {\n      proxy_pass       http://loki-write.syn-loki.svc.cluster.local:3100$request_uri;\n\
     \    }\n\n    # Ingester\n    location = /flush {\n      proxy_pass       http://loki-write.syn-loki.svc.cluster.local:3100$request_uri;\n\

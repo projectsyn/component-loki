@@ -16,9 +16,7 @@ parameters:
           S3_SECRET_ACCESS_KEY: null
           S3_ENDPOINT: null
           S3_REGION: null
-      gateway-basic-auth:
-        stringData:
-          .htpasswd: null
+
     globalNodeSelector: {}
 
     charts:
@@ -171,34 +169,13 @@ parameters:
       bloomGateway:
         nodeSelector: ${loki:globalNodeSelector}      
         replicas: 0
+      gateway:
+        nodeSelector: ${loki:globalNodeSelector}      
+        replicas: 2
 
       rbac.pspEnabled: false
       rbac.sccEnabled: true
 
-      gateway:
-        podSecurityContext:
-          fsGroup: null
-          runAsGroup: null
-          runAsUser: null
-        ingress:
-          # -- Specifies whether an ingress for the gateway should be created
-          enabled: true
-          annotations:
-            cert-manager.io/cluster-issuer: letsencrypt-production
-          hosts:
-            - host: loki.example.cm
-              paths:
-                - path: /
-                  pathType: Prefix
-          tls:
-            - secretName: loki-gateway-tls
-              hosts:
-                - loki.example.com
-        basicAuth:
-          # -- Enables basic authentication for the gateway
-          enabled: true
-          # -- The basic auth username for the gateway
-          existingSecret: gateway-basic-auth
 
       global:
         extraEnvFrom:
@@ -212,18 +189,21 @@ parameters:
             registry: ${loki:images:global:registry}
 
       sidecar:
+        nodeSelector: ${loki:globalNodeSelector}
         image:
           # -- The Docker registry and image for the k8s sidecar
           repository: ${loki:images:sidecar:registry}/${loki:images:sidecar:image}
           tag: ${loki:images:sidecar:tag}
 
       memcached:
+        nodeSelector: ${loki:globalNodeSelector}
         image:
           # -- Memcached Docker image repository
           repository: ${loki:images:memcached:registry}/${loki:images:memcached:image}
           tag: ${loki:images:memcached:tag}
 
       memcachedExporter:
+        nodeSelector: ${loki:globalNodeSelector}
         image:
           repository: ${loki:images:memcachedExporter:registry}/${loki:images:memcachedExporter:image}
           tag: ${loki:images:memcachedExporter:tag}
