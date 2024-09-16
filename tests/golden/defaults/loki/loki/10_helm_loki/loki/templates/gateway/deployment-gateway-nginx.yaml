@@ -77,7 +77,7 @@ spec:
           name: config
         - name: auth
           secret:
-            secretName: loki-gateway
+            secretName: gateway-basic-auth
         - emptyDir: {}
           name: tmp
         - emptyDir: {}

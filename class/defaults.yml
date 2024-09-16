@@ -16,6 +16,9 @@ parameters:
           S3_SECRET_ACCESS_KEY: null
           S3_ENDPOINT: null
           S3_REGION: null
+      gateway-basic-auth:
+        stringData:
+          .htpasswd: null
     globalNodeSelector: {}
 
     charts:
@@ -195,9 +198,7 @@ parameters:
           # -- Enables basic authentication for the gateway
           enabled: true
           # -- The basic auth username for the gateway
-          username: username
-          # -- The basic auth password for the gateway
-          password: verysecretpassword
+          existingSecret: gateway-basic-auth
 
       global:
         extraEnvFrom:
