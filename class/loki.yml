@@ -1,5 +1,14 @@
 parameters:
   kapitan:
+
+    dependencies:
+      - type: helm
+        source: https://grafana.github.io/helm-charts
+        chart_name: loki
+        version: ${loki:charts:loki}
+        output_path: ${_base_directory}/helmcharts/loki/v${loki:charts:loki}
+
+
     compile:
       - input_paths:
           - ${_base_directory}/component/app.jsonnet
@@ -9,3 +18,13 @@ parameters:
           - ${_base_directory}/component/main.jsonnet
         input_type: jsonnet
         output_path: loki/
+
+      - input_type: helm
+        output_type: yaml
+        input_paths:
+          - ${_base_directory}/helmcharts/loki/v${loki:charts:loki}
+        output_path: ${_instance}/10_helm_loki
+        helm_values: ${loki:helm_values}
+        helm_params:
+          name: ${loki:name}
+          namespace: ${loki:namespace:name}
