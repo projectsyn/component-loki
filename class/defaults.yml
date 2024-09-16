@@ -83,11 +83,35 @@ parameters:
       deploymentMode: SimpleScalable
 
       backend:
+        nodeSelector: ${loki:globalNodeSelector}
         replicas: 3
+        resources:
+          limits:
+            cpu: 1
+            memory: 2Gi
+          requests:
+            cpu: 0.5
+            memory: 1Gi
       read:
-        replicas: 3
+        nodeSelector: ${loki:globalNodeSelector}      
+        replicas: 2
+        resources:
+          limits:
+            cpu: 2
+            memory: 4Gi
+          requests:
+            cpu: 1
+            memory: 3Gi        
       write:
+        nodeSelector: ${loki:globalNodeSelector}      
         replicas: 3
+        resources:
+          limits:
+            cpu: 3
+            memory: 8Gi
+          requests:
+            cpu: 1
+            memory: 4Gi
 
       # Disable minio storage
       minio:
@@ -98,23 +122,32 @@ parameters:
         replicas: 0
 
       ingester:
+        nodeSelector: ${loki:globalNodeSelector}      
         replicas: 0
       querier:
+        nodeSelector: ${loki:globalNodeSelector}      
         replicas: 0
       queryFrontend:
+        nodeSelector: ${loki:globalNodeSelector}      
         replicas: 0
       queryScheduler:
+        nodeSelector: ${loki:globalNodeSelector}      
         replicas: 0
       distributor:
+        nodeSelector: ${loki:globalNodeSelector}      
         replicas: 0
       compactor:
+        nodeSelector: ${loki:globalNodeSelector}      
         replicas: 0
         retention_enabled: true
       indexGateway:
+        nodeSelector: ${loki:globalNodeSelector}      
         replicas: 0
       bloomCompactor:
+        nodeSelector: ${loki:globalNodeSelector}      
         replicas: 0
       bloomGateway:
+        nodeSelector: ${loki:globalNodeSelector}      
         replicas: 0
 
       rbac.pspEnabled: false
