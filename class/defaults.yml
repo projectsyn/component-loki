@@ -16,7 +16,6 @@ parameters:
           S3_SECRET_ACCESS_KEY: null
           S3_ENDPOINT: null
           S3_REGION: null
-
     globalNodeSelector: {}
 
     charts:
@@ -27,6 +26,26 @@ parameters:
       patchRules:
         ignoreNames: []
         patches: {}
+
+    images:
+      global:
+        registry: dockerhub.vshn.net
+      sidecar:
+        # -- The Docker registry and image for the k8s sidecar
+        registry: ${loki:images:global:registry}
+        image: kiwigrid/k8s-sidecar
+        tag: 1.27.5
+
+      memcached:
+        # -- Memcached Docker image repository
+        registry: ${loki:images:global:registry}
+        image: library/memcached
+        tag: 1.6.23-alpine
+
+      memcachedExporter:
+        registry: ${loki:images:global:registry}
+        image: prom/memcached-exporter
+        tag: v0.14.2
 
     helm_values:
       loki:
@@ -189,21 +208,24 @@ parameters:
 
         image:
             # -- Overrides the Docker registry globally for all images
-            registry: dockerhub.vshn.net
+            registry: ${loki:images:global:registry}
 
       sidecar:
         image:
           # -- The Docker registry and image for the k8s sidecar
-          repository: dockerhub.vshn.net/kiwigrid/k8s-sidecar
+          repository: ${loki:images:sidecar:registry}/${loki:images:sidecar:image}
+          tag: ${loki:images:sidecar:tag}
 
       memcached:
         image:
           # -- Memcached Docker image repository
-          repository: dockerhub.vshn.net/library/memcached
+          repository: ${loki:images:memcached:registry}/${loki:images:memcached:image}
+          tag: ${loki:images:memcached:tag}
 
       memcachedExporter:
         image:
-          repository: dockerhub.vshn.net/prom/memcached-exporter
+          repository: ${loki:images:memcachedExporter:registry}/${loki:images:memcachedExporter:image}
+          tag: ${loki:images:memcachedExporter:tag}
 
       test:
         enabled: false
