@@ -1,0 +1,31 @@
+{
+  "template": "https://github.com/projectsyn/commodore-component-template.git",
+  "commit": "fd90e16c5776bd70f98d6765609e6d7453f5ca55",
+  "checkout": "main",
+  "context": {
+    "cookiecutter": {
+      "name": "loki",
+      "slug": "loki",
+      "parameter_key": "loki",
+      "test_cases": "defaults",
+      "add_lib": "n",
+      "add_pp": "n",
+      "add_golden": "y",
+      "add_matrix": "y",
+      "add_go_unit": "n",
+      "automerge_patch": "y",
+      "automerge_patch_v0": "n",
+      "automerge_patch_regexp_blocklist": "",
+      "automerge_patch_v0_regexp_allowlist": "",
+      "automerge_minor_regexp_allowlist": "",
+      "auto_release": "y",
+      "copyright_holder": "VSHN AG <info@vshn.ch>",
+      "copyright_year": "2024",
+      "github_owner": "projectsyn",
+      "github_name": "component-loki",
+      "github_url": "https://github.com/projectsyn/component-loki",
+      "_template": "https://github.com/projectsyn/commodore-component-template.git"
+    }
+  },
+  "directory": null
+}

@@ -1,0 +1,4 @@
+parameters:
+  loki:
+    =_metadata: {}
+    namespace: syn-loki
