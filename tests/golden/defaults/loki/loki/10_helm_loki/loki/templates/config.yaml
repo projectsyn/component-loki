@@ -24,13 +24,13 @@ data:
       replication_factor: 3
       storage:
         s3:
-          access_key_id: secret
-          bucketnames: chunks
-          endpoint: objects.lpg.cloudscale.ch
+          access_key_id: ${S3_ACCESS_KEY_ID}
+          bucketnames: loki-chunks
+          endpoint: ${S3_ENDPOINT}
           insecure: false
-          region: lpg
+          region: ${S3_REGION}
           s3forcepathstyle: true
-          secret_access_key: veryvery
+          secret_access_key: ${S3_SECRET_ACCESS_KEY}
     frontend:
       scheduler_address: ""
       tail_proxy_url: ""
@@ -73,13 +73,13 @@ data:
     ruler:
       storage:
         s3:
-          access_key_id: secret
-          bucketnames: ruler
-          endpoint: objects.lpg.cloudscale.ch
+          access_key_id: ${S3_ACCESS_KEY_ID}
+          bucketnames: loki-ruler
+          endpoint: ${S3_ENDPOINT}
           insecure: false
-          region: lpg
+          region: ${S3_REGION}
           s3forcepathstyle: true
-          secret_access_key: veryvery
+          secret_access_key: ${S3_SECRET_ACCESS_KEY}
         type: s3
     runtime_config:
       file: /etc/loki/runtime-config/runtime-config.yaml

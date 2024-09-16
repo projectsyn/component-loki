@@ -41,7 +41,9 @@ spec:
             - -v
             - -u 11211
           env: null
-          envFrom: null
+          envFrom:
+            - secretRef:
+                name: loki-bucket-secret
           image: dockerhub.vshn.net/library/memcached:1.6.23-alpine
           imagePullPolicy: IfNotPresent
           name: memcached

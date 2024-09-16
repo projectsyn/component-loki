@@ -9,12 +9,13 @@ parameters:
       create: true
       metadata: {}
 
-    # secrets:
-    #   loki-bucket-secret:
-    #     stringData:
-    #       S3_ACCESS_KEY_ID: null
-    #       S3_SECRET_ACCESS_KEY: null
-    #       S3_ENDPOINT: null
+    secrets:
+      loki-bucket-secret:
+        stringData:
+          S3_ACCESS_KEY_ID: null
+          S3_SECRET_ACCESS_KEY: null
+          S3_ENDPOINT: null
+          S3_REGION: null
 
     globalNodeSelector: {}
 
@@ -48,20 +49,20 @@ parameters:
         storage:
           type: s3
           bucketNames:
-            chunks: "chunks"
-            ruler: "ruler"
-            admin: "loki-admin"
+            chunks: ${loki:name}-chunks
+            ruler: ${loki:name}-ruler
+            admin: ${loki:name}-loki-admin
           s3:
             # s3 URL can be used to specify the endpoint, access key, secret key, and bucket name
             #s3: s3://access_key:secret_access_key@custom_endpoint/bucket_name
             # AWS endpoint URL
-            endpoint: objects.lpg.cloudscale.ch
+            endpoint: \${S3_ENDPOINT}
             # AWS region where the S3 bucket is located
-            region: lpg
+            region: \${S3_REGION}
             # AWS secret access key
-            secretAccessKey: veryvery
+            secretAccessKey: \${S3_SECRET_ACCESS_KEY}
             # AWS access key ID
-            accessKeyId: secret
+            accessKeyId: \${S3_ACCESS_KEY_ID}
             # AWS signature version (e.g., v2 or v4)
             #signatureVersion: <your-signature-version>
             # Forces the path style for S3 (true/false)
@@ -147,6 +148,9 @@ parameters:
           password: verysecretpassword
 
       global:
+        extraEnvFrom:
+          - secretRef:
+              name: loki-bucket-secret
         dnsService: dns-default
         dnsNamespace: openshift-dns
 
