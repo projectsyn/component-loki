@@ -176,7 +176,6 @@ parameters:
       rbac.pspEnabled: false
       rbac.sccEnabled: true
 
-
       global:
         extraEnvFrom:
           - secretRef:
