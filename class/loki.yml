@@ -34,5 +34,8 @@ parameters:
     postprocess:
       filters:
         - type: jsonnet
+          filter: postprocess/remove-null-objs.jsonnet
+          path: ${_instance}/10_helm_loki/loki/templates/monitoring
+        - type: jsonnet
           filter: postprocess/patch-alerts.jsonnet
           path: ${_instance}/10_helm_loki/loki/templates/monitoring
