@@ -17,7 +17,7 @@ parameters:
       - input_paths:
           - ${_base_directory}/component/main.jsonnet
         input_type: jsonnet
-        output_path: loki/
+        output_path: ${_instance}/
 
       - input_type: helm
         output_type: yaml
