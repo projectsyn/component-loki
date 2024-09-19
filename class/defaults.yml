@@ -49,12 +49,6 @@ parameters:
         tag: v0.14.2
 
     helm_values:
-      #TODO Remove once done testing
-      monitoring:
-        serviceMonitor:
-          enabled: true
-        rules:
-          enabled: true
       loki:
         schemaConfig:
           configs:
