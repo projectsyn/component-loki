@@ -30,7 +30,7 @@ parameters:
 
     images:
       global:
-        registry: dockerhub.vshn.net
+        registry: docker.io
       sidecar:
         # -- The Docker registry and image for the k8s sidecar
         registry: ${loki:images:global:registry}

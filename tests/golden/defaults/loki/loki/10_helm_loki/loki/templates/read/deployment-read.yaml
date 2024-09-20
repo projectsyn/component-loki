@@ -47,7 +47,7 @@ spec:
             - -target=read
             - -legacy-read-mode=false
             - -common.compactor-grpc-address=loki-backend.syn-loki.svc.cluster.local:9095
-          image: dockerhub.vshn.net/grafana/loki:3.1.1
+          image: docker.io/grafana/loki:3.1.1
           imagePullPolicy: IfNotPresent
           name: loki
           ports:

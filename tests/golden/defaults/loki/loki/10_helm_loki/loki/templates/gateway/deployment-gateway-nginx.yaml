@@ -37,7 +37,7 @@ spec:
                   app.kubernetes.io/component: gateway
               topologyKey: kubernetes.io/hostname
       containers:
-        - image: dockerhub.vshn.net/nginxinc/nginx-unprivileged:1.27-alpine
+        - image: docker.io/nginxinc/nginx-unprivileged:1.27-alpine
           imagePullPolicy: IfNotPresent
           name: nginx
           ports:

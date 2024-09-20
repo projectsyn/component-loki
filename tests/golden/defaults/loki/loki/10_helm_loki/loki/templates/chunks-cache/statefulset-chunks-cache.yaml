@@ -44,7 +44,7 @@ spec:
           envFrom:
             - secretRef:
                 name: loki-bucket-secret
-          image: dockerhub.vshn.net/library/memcached:1.6.23-alpine
+          image: docker.io/library/memcached:1.6.23-alpine
           imagePullPolicy: IfNotPresent
           name: memcached
           ports:
@@ -65,7 +65,7 @@ spec:
         - args:
             - --memcached.address=localhost:11211
             - --web.listen-address=0.0.0.0:9150
-          image: dockerhub.vshn.net/prom/memcached-exporter:v0.14.2
+          image: docker.io/prom/memcached-exporter:v0.14.2
           imagePullPolicy: IfNotPresent
           name: exporter
           ports:
