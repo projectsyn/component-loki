@@ -102,9 +102,6 @@ parameters:
 
       deploymentMode: SimpleScalable
 
-      rbac:
-        namespaced: true
-
       backend:
         extraArgs:
           - '-config.expand-env=true'
