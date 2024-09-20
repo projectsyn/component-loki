@@ -75,6 +75,7 @@ parameters:
             endpoint: \${S3_ENDPOINT}
             secretAccessKey: \${S3_SECRET_ACCESS_KEY}
             accessKeyId: \${S3_ACCESS_KEY_ID}
+            s3ForcePathStyle: true
 
         podSecurityContext:
           fsGroup: null
@@ -87,6 +88,9 @@ parameters:
       deploymentMode: SimpleScalable
 
       backend:
+        extraEnvFrom:
+          - secretRef:
+              name: loki-bucket-secret
         extraArgs:
           - '-config.expand-env=true'
         nodeSelector: ${loki:globalNodeSelector}
@@ -99,6 +103,9 @@ parameters:
             cpu: 0.5
             memory: 1Gi
       read:
+        extraEnvFrom:
+          - secretRef:
+              name: loki-bucket-secret
         extraArgs:
           - '-config.expand-env=true'
         nodeSelector: ${loki:globalNodeSelector}
@@ -111,6 +118,9 @@ parameters:
             cpu: 1
             memory: 3Gi
       write:
+        extraEnvFrom:
+          - secretRef:
+              name: loki-bucket-secret
         extraArgs:
           - '-config.expand-env=true'
         nodeSelector: ${loki:globalNodeSelector}
@@ -160,6 +170,11 @@ parameters:
         nodeSelector: ${loki:globalNodeSelector}
         replicas: 0
       gateway:
+        extraEnvFrom:
+          - secretRef:
+              name: loki-bucket-secret
+        extraArgs:
+          - '-config.expand-env=true'
         nodeSelector: ${loki:globalNodeSelector}
         replicas: 2
 
@@ -170,6 +185,8 @@ parameters:
         extraEnvFrom:
           - secretRef:
               name: loki-bucket-secret
+        extraArgs:
+          - '-config.expand-env=true'
         dnsService: dns-default
         dnsNamespace: openshift-dns
 

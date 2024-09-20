@@ -24,7 +24,7 @@ spec:
   template:
     metadata:
       annotations:
-        checksum/config: 7d0ae1d009ee1eb3f732e47396ab769f149cace0bd00d72b9ba754f28c3bede4
+        checksum/config: f75dace34ca1a3d7ac1dc1dacbe31a8fba51ccc104b73c6528308b9781a2ad11
       labels:
         app.kubernetes.io/component: write
         app.kubernetes.io/instance: loki
@@ -44,6 +44,9 @@ spec:
             - -config.file=/etc/loki/config/config.yaml
             - -target=write
             - -config.expand-env=true
+          envFrom:
+            - secretRef:
+                name: loki-bucket-secret
           image: docker.io/grafana/loki:3.1.1
           imagePullPolicy: IfNotPresent
           name: loki

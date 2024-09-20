@@ -37,7 +37,10 @@ spec:
                   app.kubernetes.io/component: gateway
               topologyKey: kubernetes.io/hostname
       containers:
-        - image: docker.io/nginxinc/nginx-unprivileged:1.27-alpine
+        - envFrom:
+            - secretRef:
+                name: loki-bucket-secret
+          image: docker.io/nginxinc/nginx-unprivileged:1.27-alpine
           imagePullPolicy: IfNotPresent
           name: nginx
           ports:
