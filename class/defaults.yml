@@ -106,6 +106,8 @@ parameters:
         namespaced: true
 
       backend:
+        extraArgs:
+          - '-config.expand-env=true'
         nodeSelector: ${loki:globalNodeSelector}
         replicas: 3
         resources:
@@ -116,6 +118,8 @@ parameters:
             cpu: 0.5
             memory: 1Gi
       read:
+        extraArgs:
+          - '-config.expand-env=true'
         nodeSelector: ${loki:globalNodeSelector}
         replicas: 2
         resources:
@@ -126,6 +130,8 @@ parameters:
             cpu: 1
             memory: 3Gi
       write:
+        extraArgs:
+          - '-config.expand-env=true'
         nodeSelector: ${loki:globalNodeSelector}
         replicas: 3
         resources:
