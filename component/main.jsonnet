@@ -21,7 +21,7 @@ local secrets = com.generateResources(
 
 {
   [if params.namespace.create then '00_namespace']: kube.Namespace(params.namespace.name) {
-      metadata+: com.makeMergeable(params.namespace.metadata),
+    metadata+: com.makeMergeable(params.namespace.metadata),
   },
   '01_secrets': secrets,
   // Empty file to make sure the directory is created. Later used in patching alerts.

@@ -102,6 +102,9 @@ parameters:
 
       deploymentMode: SimpleScalable
 
+      rbac:
+        namespaced: true
+
       backend:
         nodeSelector: ${loki:globalNodeSelector}
         replicas: 3
@@ -184,8 +187,8 @@ parameters:
         dnsNamespace: openshift-dns
 
         image:
-            # -- Overrides the Docker registry globally for all images
-            registry: ${loki:images:global:registry}
+          # -- Overrides the Docker registry globally for all images
+          registry: ${loki:images:global:registry}
 
       sidecar:
         nodeSelector: ${loki:globalNodeSelector}
