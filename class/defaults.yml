@@ -113,7 +113,7 @@ parameters:
             cpu: 0.5
             memory: 1Gi
       read:
-        nodeSelector: ${loki:globalNodeSelector}      
+        nodeSelector: ${loki:globalNodeSelector}
         replicas: 2
         resources:
           limits:
@@ -121,9 +121,9 @@ parameters:
             memory: 4Gi
           requests:
             cpu: 1
-            memory: 3Gi        
+            memory: 3Gi
       write:
-        nodeSelector: ${loki:globalNodeSelector}      
+        nodeSelector: ${loki:globalNodeSelector}
         replicas: 3
         resources:
           limits:
@@ -142,35 +142,35 @@ parameters:
         replicas: 0
 
       ingester:
-        nodeSelector: ${loki:globalNodeSelector}      
+        nodeSelector: ${loki:globalNodeSelector}
         replicas: 0
       querier:
-        nodeSelector: ${loki:globalNodeSelector}      
+        nodeSelector: ${loki:globalNodeSelector}
         replicas: 0
       queryFrontend:
-        nodeSelector: ${loki:globalNodeSelector}      
+        nodeSelector: ${loki:globalNodeSelector}
         replicas: 0
       queryScheduler:
-        nodeSelector: ${loki:globalNodeSelector}      
+        nodeSelector: ${loki:globalNodeSelector}
         replicas: 0
       distributor:
-        nodeSelector: ${loki:globalNodeSelector}      
+        nodeSelector: ${loki:globalNodeSelector}
         replicas: 0
       compactor:
-        nodeSelector: ${loki:globalNodeSelector}      
+        nodeSelector: ${loki:globalNodeSelector}
         replicas: 0
         retention_enabled: true
       indexGateway:
-        nodeSelector: ${loki:globalNodeSelector}      
+        nodeSelector: ${loki:globalNodeSelector}
         replicas: 0
       bloomCompactor:
-        nodeSelector: ${loki:globalNodeSelector}      
+        nodeSelector: ${loki:globalNodeSelector}
         replicas: 0
       bloomGateway:
-        nodeSelector: ${loki:globalNodeSelector}      
+        nodeSelector: ${loki:globalNodeSelector}
         replicas: 0
       gateway:
-        nodeSelector: ${loki:globalNodeSelector}      
+        nodeSelector: ${loki:globalNodeSelector}
         replicas: 2
 
       rbac.pspEnabled: false
