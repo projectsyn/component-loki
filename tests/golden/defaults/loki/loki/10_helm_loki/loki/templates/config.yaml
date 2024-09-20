@@ -28,8 +28,7 @@ data:
           bucketnames: loki-chunks
           endpoint: ${S3_ENDPOINT}
           insecure: false
-          region: ${S3_REGION}
-          s3forcepathstyle: true
+          s3forcepathstyle: false
           secret_access_key: ${S3_SECRET_ACCESS_KEY}
     frontend:
       scheduler_address: ""
@@ -77,8 +76,7 @@ data:
           bucketnames: loki-ruler
           endpoint: ${S3_ENDPOINT}
           insecure: false
-          region: ${S3_REGION}
-          s3forcepathstyle: true
+          s3forcepathstyle: false
           secret_access_key: ${S3_SECRET_ACCESS_KEY}
         type: s3
     runtime_config:
