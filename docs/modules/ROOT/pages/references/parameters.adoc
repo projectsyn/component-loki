@@ -2,18 +2,179 @@
 
 The parent key for all of the following parameters is `loki`.
 
-== `namespace`
+== `name`
 
 [horizontal]
 type:: string
-default:: `syn-loki`
+default:: `${_instance}`
+
+The name of the instance.
+
+
+== `namespace`
+
+[horizontal]
+type:: dict
+default::
++
+[source,yaml]
+----
+namespace:
+  name: syn-loki <1>
+  create: true <2>
+  metadata: {} <3>
+----
+<1> The name of the namespace to deploy component into.
+<2> Should the namespace be created by the component.
+<3> Metadata to add to the namespace.
 
 The namespace in which to deploy this component.
+
+
+== `secrets`
+
+[horizontal]
+type:: dict
+default::
++
+[source,yaml]
+----
+secrets:
+  loki-bucket-secret:
+    stringData:
+      S3_ACCESS_KEY_ID: null
+      S3_SECRET_ACCESS_KEY: null
+      S3_ENDPOINT: null
+----
+
+A dict of secrets to create in the namespace. The key is the name of the secret, the value is the content of the secret.
+The value must be a dict with a key `stringData` which is a dict of key/value pairs to add to the secret.
+
+Holds the secrets for the S3 bucket by default.
+
+
+== `globalNodeSelector`
+
+[horizontal]
+type:: dict
+default:: `{}`
+
+Node selector configuration which is used for each component's `nodeSelector` field in parameter `helm_values`.
+
+This value is used verbatim as a Kubernetes node selector.
+
+
+== `charts`
+
+[horizontal]
+type:: dict
+default::
++
+[source,yaml]
+----
+charts:
+  loki: "<CURRENT VERSION>"
+----
+
+Holds the reference to the used version of the charts.
+See https://github.com/projectsyn/component-loki/blob/master/class/defaults.yml[class/defaults.yml] for the current version.
+
+
+== `alerts`
+
+Configurations related to alerts.
+
+[NOTE]
+====
+Upstream service monitors, rules, and alerts can be enabled by setting the following Helm values:
+
+[source,yaml]
+----
+helm_values:
+  monitoring:
+    serviceMonitor:
+      enabled: true
+    rules:
+      enabled: true
+----
+====
+
+=== `alerts.additionalRules`
+
+[horizontal]
+type:: dict
+default:: https://github.com/projectsyn/component-loki/blob/master/class/defaults.yml[See `class/defaults.yml`]
+example::
++
+[source,yaml]
+----
+additionalRules:
+  "alert:CustomTestAlert":
+    expr: vector(1) == 0
+    for: 1h
+    annotations:
+      summary: Test alert
+    labels:
+      severity: warning
+----
+
+This parameter allows users to configure additional alerting and recording rules.
+All rules defined in this parameter will be added to rule group `loki-custom.rules`.
+
+=== `alerts.patchRules`
+
+[horizontal]
+type:: dict
+default:: https://github.com/projectsyn/component-mimir/blob/master/class/defaults.yml[See `class/defaults.yml`]
+example::
++
+[source,yaml]
+----
+patchRules:
+  ignoreNames:
+    - LokiContinuousTestNotRunningOnWrites
+  patches:
+    LokiInconsistentRuntimeConfig:
+      for: 15m
+----
+
+This parameter allows users to patch or remove alerts provided by the upstream Loki chart.
+
+The values in the `ignoreNames` parameter correspond to the field `alert` of the alert to ignore.
+
+The keys in the `patches` parameter correspond to the field `alert` of the alert to patch.
+The component expects valid partial Prometheus alert rule objects as values.
+
+IMPORTANT: The provided values aren't validated, they're applied to the corresponding upstream alert as-is.
+
+
+== `helm_values`
+
+[horizontal]
+type:: dict
+default:: see https://github.com/projectsyn/component-loki/blob/master/class/defaults.yml[class/defaults.yml]
+
+Holds the values for the helm chart.
+
+The defaults are close to the upstream defaults, with HA enabled, and the bucket secret added.
 
 
 == Example
 
 [source,yaml]
 ----
-namespace: example-namespace
+name: example-loki
+namespace:
+  name: example-loki
+  create: true
+  metadata:
+    labels:
+      example.com/organization: example
+
+secrets:
+  mimir-bucket-secret:
+    stringData:
+      S3_ACCESS_KEY_ID: "?{vaultkv:${cluster:tenant}/${cluster:name}/example-loki/s3_access_key}"
+      S3_SECRET_ACCESS_KEY: "?{vaultkv:${cluster:tenant}/${cluster:name}/example-loki/s3_secret_key}"
+      S3_ENDPOINT: objects.s3.example.com
 ----

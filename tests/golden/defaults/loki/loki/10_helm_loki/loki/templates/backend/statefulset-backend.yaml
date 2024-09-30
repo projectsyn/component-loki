@@ -93,7 +93,7 @@ spec:
             timeoutSeconds: 1
           resources:
             limits:
-              cpu: 1
+              cpu: 2
               memory: 2Gi
             requests:
               cpu: 0.5
