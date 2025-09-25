@@ -5,10 +5,9 @@ metadata:
   labels:
     app.kubernetes.io/component: memcached-chunks-cache
     app.kubernetes.io/instance: loki
-    app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: loki
-    app.kubernetes.io/version: 3.1.1
-    helm.sh/chart: loki-6.12.0
+    app.kubernetes.io/version: 3.5.5
+    helm.sh/chart: loki-6.41.1
     name: memcached-chunks-cache
   name: loki-chunks-cache
   namespace: syn-loki
@@ -46,10 +45,24 @@ spec:
                 name: loki-bucket-secret
           image: docker.io/library/memcached:1.6.23-alpine
           imagePullPolicy: IfNotPresent
+          livenessProbe:
+            failureThreshold: 3
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            tcpSocket:
+              port: client
+            timeoutSeconds: 5
           name: memcached
           ports:
             - containerPort: 11211
               name: client
+          readinessProbe:
+            failureThreshold: 6
+            initialDelaySeconds: 5
+            periodSeconds: 5
+            tcpSocket:
+              port: client
+            timeoutSeconds: 3
           resources:
             limits:
               memory: 9830Mi
@@ -67,10 +80,26 @@ spec:
             - --web.listen-address=0.0.0.0:9150
           image: docker.io/prom/memcached-exporter:v0.14.2
           imagePullPolicy: IfNotPresent
+          livenessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /metrics
+              port: http-metrics
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            timeoutSeconds: 5
           name: exporter
           ports:
             - containerPort: 9150
               name: http-metrics
+          readinessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /metrics
+              port: http-metrics
+            initialDelaySeconds: 5
+            periodSeconds: 5
+            timeoutSeconds: 3
           resources:
             limits: {}
             requests: {}
@@ -82,7 +111,11 @@ spec:
             readOnlyRootFilesystem: true
       initContainers: []
       nodeSelector: {}
-      securityContext: {}
+      securityContext:
+        fsGroup: 11211
+        runAsGroup: 11211
+        runAsNonRoot: true
+        runAsUser: 11211
       serviceAccountName: loki
       terminationGracePeriodSeconds: 60
       tolerations: []

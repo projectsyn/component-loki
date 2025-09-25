@@ -4,11 +4,10 @@ metadata:
   labels:
     app.kubernetes.io/component: backend
     app.kubernetes.io/instance: loki
-    app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: loki
     app.kubernetes.io/part-of: memberlist
-    app.kubernetes.io/version: 3.1.1
-    helm.sh/chart: loki-6.12.0
+    app.kubernetes.io/version: 3.5.5
+    helm.sh/chart: loki-6.41.1
   name: loki-backend
   namespace: syn-loki
 spec:
@@ -27,12 +26,15 @@ spec:
   template:
     metadata:
       annotations:
-        checksum/config: f75dace34ca1a3d7ac1dc1dacbe31a8fba51ccc104b73c6528308b9781a2ad11
+        checksum/config: e233049be409c294a95288e11d46326c14a387dea3b224a124853173a4d98bb6
+        kubectl.kubernetes.io/default-container: loki
       labels:
         app.kubernetes.io/component: backend
         app.kubernetes.io/instance: loki
         app.kubernetes.io/name: loki
         app.kubernetes.io/part-of: memberlist
+        app.kubernetes.io/version: 3.5.5
+        helm.sh/chart: loki-6.41.1
     spec:
       affinity:
         podAntiAffinity:
@@ -40,30 +42,11 @@ spec:
             - labelSelector:
                 matchLabels:
                   app.kubernetes.io/component: backend
+                  app.kubernetes.io/instance: loki
+                  app.kubernetes.io/name: loki
               topologyKey: kubernetes.io/hostname
       automountServiceAccountToken: true
       containers:
-        - env:
-            - name: METHOD
-              value: WATCH
-            - name: LABEL
-              value: loki_rule
-            - name: FOLDER
-              value: /rules
-            - name: RESOURCE
-              value: both
-            - name: WATCH_SERVER_TIMEOUT
-              value: '60'
-            - name: WATCH_CLIENT_TIMEOUT
-              value: '60'
-            - name: LOG_LEVEL
-              value: INFO
-          image: docker.io/kiwigrid/k8s-sidecar:1.27.5
-          imagePullPolicy: IfNotPresent
-          name: loki-sc-rules
-          volumeMounts:
-            - mountPath: /rules
-              name: sc-rules-volume
         - args:
             - -config.file=/etc/loki/config/config.yaml
             - -target=backend
@@ -72,7 +55,7 @@ spec:
           envFrom:
             - secretRef:
                 name: loki-bucket-secret
-          image: docker.io/grafana/loki:3.1.1
+          image: docker.io/grafana/loki:3.5.5
           imagePullPolicy: IfNotPresent
           name: loki
           ports:
@@ -113,6 +96,33 @@ spec:
               name: tmp
             - mountPath: /var/loki
               name: data
+            - mountPath: /rules
+              name: sc-rules-volume
+        - env:
+            - name: METHOD
+              value: WATCH
+            - name: LABEL
+              value: loki_rule
+            - name: FOLDER
+              value: /rules
+            - name: RESOURCE
+              value: both
+            - name: WATCH_SERVER_TIMEOUT
+              value: '60'
+            - name: WATCH_CLIENT_TIMEOUT
+              value: '60'
+            - name: LOG_LEVEL
+              value: INFO
+          image: docker.io/kiwigrid/k8s-sidecar:1.27.5
+          imagePullPolicy: IfNotPresent
+          name: loki-sc-rules
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+                - ALL
+            readOnlyRootFilesystem: true
+          volumeMounts:
             - mountPath: /rules
               name: sc-rules-volume
       securityContext:
