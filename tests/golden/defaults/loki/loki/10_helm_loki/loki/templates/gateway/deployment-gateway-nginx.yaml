@@ -4,10 +4,9 @@ metadata:
   labels:
     app.kubernetes.io/component: gateway
     app.kubernetes.io/instance: loki
-    app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: loki
-    app.kubernetes.io/version: 3.1.1
-    helm.sh/chart: loki-6.12.0
+    app.kubernetes.io/version: 3.5.5
+    helm.sh/chart: loki-6.41.1
   name: loki-gateway
   namespace: syn-loki
 spec:
@@ -23,7 +22,7 @@ spec:
   template:
     metadata:
       annotations:
-        checksum/config: 4539f20113e95e569b38623fcb64e74bb161d820082cccad80eba1cbefa8d164
+        checksum/config: 74317071dbef38396cc50bc60e20ce91d1f9e1a37098f0e0f3f88063d354ac46
       labels:
         app.kubernetes.io/component: gateway
         app.kubernetes.io/instance: loki
@@ -35,12 +34,14 @@ spec:
             - labelSelector:
                 matchLabels:
                   app.kubernetes.io/component: gateway
+                  app.kubernetes.io/instance: loki
+                  app.kubernetes.io/name: loki
               topologyKey: kubernetes.io/hostname
       containers:
         - envFrom:
             - secretRef:
                 name: loki-bucket-secret
-          image: docker.io/nginxinc/nginx-unprivileged:1.27-alpine
+          image: docker.io/nginxinc/nginx-unprivileged:1.29-alpine
           imagePullPolicy: IfNotPresent
           name: nginx
           ports:
