@@ -6,8 +6,8 @@ metadata:
     app.kubernetes.io/component: memcached-results-cache
     app.kubernetes.io/instance: loki
     app.kubernetes.io/name: loki
-    app.kubernetes.io/version: 3.5.5
-    helm.sh/chart: loki-6.41.1
+    app.kubernetes.io/version: 3.6.5
+    helm.sh/chart: loki-6.53.0
   name: loki-results-cache
   namespace: syn-loki
 spec:
@@ -15,10 +15,10 @@ spec:
   ports:
     - name: memcached-client
       port: 11211
-      targetPort: 11211
+      targetPort: client
     - name: http-metrics
       port: 9150
-      targetPort: 9150
+      targetPort: http-metrics
   selector:
     app.kubernetes.io/component: memcached-results-cache
     app.kubernetes.io/instance: loki

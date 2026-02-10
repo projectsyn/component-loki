@@ -5,8 +5,8 @@ metadata:
     app.kubernetes.io/component: gateway
     app.kubernetes.io/instance: loki
     app.kubernetes.io/name: loki
-    app.kubernetes.io/version: 3.5.5
-    helm.sh/chart: loki-6.41.1
+    app.kubernetes.io/version: 3.6.5
+    helm.sh/chart: loki-6.53.0
   name: loki-gateway
   namespace: syn-loki
 spec:
@@ -22,7 +22,7 @@ spec:
   template:
     metadata:
       annotations:
-        checksum/config: 74317071dbef38396cc50bc60e20ce91d1f9e1a37098f0e0f3f88063d354ac46
+        checksum/config: 7bfc50d374eae2115ab6c9e390663d588ef30ac006a7d86607f71b081306a904
       labels:
         app.kubernetes.io/component: gateway
         app.kubernetes.io/instance: loki

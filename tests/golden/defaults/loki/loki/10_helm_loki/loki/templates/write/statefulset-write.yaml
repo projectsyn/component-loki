@@ -6,8 +6,8 @@ metadata:
     app.kubernetes.io/instance: loki
     app.kubernetes.io/name: loki
     app.kubernetes.io/part-of: memberlist
-    app.kubernetes.io/version: 3.5.5
-    helm.sh/chart: loki-6.41.1
+    app.kubernetes.io/version: 3.6.5
+    helm.sh/chart: loki-6.53.0
   name: loki-write
   namespace: syn-loki
 spec:
@@ -23,14 +23,14 @@ spec:
   template:
     metadata:
       annotations:
-        checksum/config: e233049be409c294a95288e11d46326c14a387dea3b224a124853173a4d98bb6
+        checksum/config: 09cd2266adca22a506ef15dae85fac414518941053386bb53ddf9168c4faaa0f
       labels:
         app.kubernetes.io/component: write
         app.kubernetes.io/instance: loki
         app.kubernetes.io/name: loki
         app.kubernetes.io/part-of: memberlist
-        app.kubernetes.io/version: 3.5.5
-        helm.sh/chart: loki-6.41.1
+        app.kubernetes.io/version: 3.6.5
+        helm.sh/chart: loki-6.53.0
     spec:
       affinity:
         podAntiAffinity:
@@ -50,7 +50,7 @@ spec:
           envFrom:
             - secretRef:
                 name: loki-bucket-secret
-          image: docker.io/grafana/loki:3.5.5
+          image: docker.io/grafana/loki:3.6.5
           imagePullPolicy: IfNotPresent
           name: loki
           ports:
@@ -64,10 +64,13 @@ spec:
               name: http-memberlist
               protocol: TCP
           readinessProbe:
+            failureThreshold: 3
             httpGet:
               path: /ready
               port: http-metrics
-            initialDelaySeconds: 30
+            initialDelaySeconds: 15
+            periodSeconds: 10
+            successThreshold: 1
             timeoutSeconds: 1
           resources:
             limits:
@@ -91,6 +94,7 @@ spec:
               name: data
       enableServiceLinks: true
       securityContext:
+        fsGroupChangePolicy: OnRootMismatch
         runAsNonRoot: true
       serviceAccountName: loki
       terminationGracePeriodSeconds: 300
