@@ -19,7 +19,7 @@ data:
     \    listen             [::]:8080;\n\n    location = / {\n      \n      return\
     \ 200 'OK';\n      auth_basic off;\n    }\n\n    ########################################################\n\
     \    # Configure backend targets\n    location ^~ /ui {\n      \n      proxy_pass\
-    \       http://loki-write.syn-loki.svc.cluster.local:3100$request_uri;\n    }\n\
+    \       http://loki-read.syn-loki.svc.cluster.local:3100$request_uri;\n    }\n\
     \n    # Distributor\n    location = /api/prom/push {\n      \n      proxy_pass\
     \       http://loki-write.syn-loki.svc.cluster.local:3100$request_uri;\n    }\n\
     \    location = /loki/api/v1/push {\n      \n      proxy_pass       http://loki-write.syn-loki.svc.cluster.local:3100$request_uri;\n\
@@ -73,7 +73,7 @@ metadata:
     app.kubernetes.io/component: gateway
     app.kubernetes.io/instance: loki
     app.kubernetes.io/name: loki
-    app.kubernetes.io/version: 3.5.5
-    helm.sh/chart: loki-6.41.1
+    app.kubernetes.io/version: 3.6.5
+    helm.sh/chart: loki-6.53.0
   name: loki-gateway
   namespace: syn-loki

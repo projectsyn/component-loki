@@ -20,7 +20,7 @@ parameters:
     globalNodeSelector: {}
 
     charts:
-      loki: "6.41.1"
+      loki: "6.53.0"
 
     alerts:
       additionalRules: {}
