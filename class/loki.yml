@@ -1,13 +1,11 @@
 parameters:
   kapitan:
-
     dependencies:
       - type: helm
-        source: https://grafana.github.io/helm-charts
+        source: ${loki:charts:loki:source}
         chart_name: loki
-        version: ${loki:charts:loki}
-        output_path: ${_base_directory}/helmcharts/loki/v${loki:charts:loki}
-
+        version: ${loki:charts:loki:version}
+        output_path: ${_base_directory}/helmcharts/loki/${loki:charts:loki:version}
 
     compile:
       - input_paths:
@@ -19,26 +17,32 @@ parameters:
         input_type: jsonnet
         output_path: ${_instance}/
 
+      # Helm chart
+      # - input_type: jsonnet
+      #   input_paths:
+      #     - ${_base_directory}/component/helm_presets.jsonnet
+      #     - ${_base_directory}/component/helm_values.jsonnet
+      #   output_path: ${_base_directory}/helmcharts/loki/${loki:charts:loki:version}/
       - input_type: helm
         output_type: yaml
         input_paths:
-          - ${_base_directory}/helmcharts/loki/v${loki:charts:loki}
+          - ${_base_directory}/helmcharts/loki/${loki:charts:loki:version}
         output_path: ${_instance}/10_helm_loki
         helm_values: ${loki:helm_values}
         helm_params:
-          name: ${loki:name}
+          name: ${_instance}
           namespace: ${loki:namespace:name}
           api_versions: monitoring.coreos.com/v1/ServiceMonitor,monitoring.coreos.com/v1/PrometheusRule
 
-  commodore:
-    postprocess:
-      filters:
-        - type: jsonnet
-          filter: postprocess/remove-null-objs.jsonnet
-          path: ${_instance}/10_helm_loki/loki/templates/monitoring
-        - type: jsonnet
-          filter: postprocess/patch-alerts.jsonnet
-          path: ${_instance}/10_helm_loki/loki/templates/monitoring
-        - type: jsonnet
-          filter: postprocess/patch-crb.jsonnet
-          path: ${_instance}/10_helm_loki/loki/templates/backend
+  # commodore:
+  #   postprocess:
+  #     filters:
+  #       - type: jsonnet
+  #         filter: postprocess/remove-null-objs.jsonnet
+  #         path: ${_instance}/10_helm_loki/loki/templates/monitoring
+  #       - type: jsonnet
+  #         filter: postprocess/patch-alerts.jsonnet
+  #         path: ${_instance}/10_helm_loki/loki/templates/monitoring
+  #       - type: jsonnet
+  #         filter: postprocess/patch-crb.jsonnet
+  #         path: ${_instance}/10_helm_loki/loki/templates/backend

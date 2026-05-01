@@ -4,11 +4,29 @@ parameters:
       multi_instance: true
       multi_tenant: true
 
-    name: ${_instance}
     namespace:
       name: syn-loki
       create: true
       metadata: {}
+
+    charts:
+      loki:
+        source: https://grafana-community.github.io/helm-charts
+        version: v13.5.0
+
+    images:
+      loki:
+        registry: docker.io
+        repository: grafana/mimir
+      memcached:
+        registry: docker.io
+        repository: library/memcached
+      memcachedExporter:
+        registry: docker.io
+        repository: prom/memcached-exporter
+      nginx:
+        registry: docker.io
+        repository: nginxinc/nginx-unprivileged
 
     secrets:
       loki-bucket-secret:
@@ -19,8 +37,8 @@ parameters:
 
     globalNodeSelector: {}
 
-    charts:
-      loki: "6.53.0"
+    # charts:
+    #   loki: "6.53.0"
 
     alerts:
       additionalRules: {}
@@ -28,27 +46,46 @@ parameters:
         ignoreNames: []
         patches: {}
 
-    images:
-      global:
-        registry: docker.io
-      sidecar:
-        # -- The Docker registry and image for the k8s sidecar
-        registry: ${loki:images:global:registry}
-        image: kiwigrid/k8s-sidecar
-        tag: 1.27.5
+    # images:
+    #   global:
+    #     registry: docker.io
+    #   sidecar:
+    #     # -- The Docker registry and image for the k8s sidecar
+    #     registry: ${loki:images:global:registry}
+    #     image: kiwigrid/k8s-sidecar
+    #     tag: 1.27.5
 
-      memcached:
-        # -- Memcached Docker image repository
-        registry: ${loki:images:global:registry}
-        image: library/memcached
-        tag: 1.6.23-alpine
+      # memcached:
+      #   # -- Memcached Docker image repository
+      #   registry: ${loki:images:global:registry}
+      #   image: library/memcached
+      #   tag: 1.6.23-alpine
 
-      memcachedExporter:
-        registry: ${loki:images:global:registry}
-        image: prom/memcached-exporter
-        tag: v0.14.2
+      # memcachedExporter:
+      #   registry: ${loki:images:global:registry}
+      #   image: prom/memcached-exporter
+      #   tag: v0.14.2
 
     helm_values:
+      deploymentMode: Distributed
+      loki:
+        schemaConfig:
+          configs:
+            - from: 2024-04-01
+              store: tsdb
+              object_store: s3
+              schema: v13
+              index:
+                prefix: loki_index_
+                period: 24h
+        storage:
+          type: s3
+          bucketNames:
+            chunks: ${_instance}-chunks
+            ruler: ${_instance}-ruler
+            admin: ${_instance}-loki-admin
+
+    helm_old:
       loki:
         schemaConfig:
           configs:
@@ -69,9 +106,9 @@ parameters:
         storage:
           type: s3
           bucketNames:
-            chunks: ${loki:name}-chunks
-            ruler: ${loki:name}-ruler
-            admin: ${loki:name}-loki-admin
+            chunks: ${_instance}-chunks
+            ruler: ${_instance}-ruler
+            admin: ${_instance}-loki-admin
           s3:
             endpoint: \${S3_ENDPOINT}
             secretAccessKey: \${S3_SECRET_ACCESS_KEY}
@@ -192,27 +229,27 @@ parameters:
 
         image:
           # -- Overrides the Docker registry globally for all images
-          registry: ${loki:images:global:registry}
+          registry: ${loki:images:loki:registry}
 
-      sidecar:
-        nodeSelector: ${loki:globalNodeSelector}
-        image:
-          # -- The Docker registry and image for the k8s sidecar
-          repository: ${loki:images:sidecar:registry}/${loki:images:sidecar:image}
-          tag: ${loki:images:sidecar:tag}
+      # sidecar:
+      #   nodeSelector: ${loki:globalNodeSelector}
+      #   image:
+      #     # -- The Docker registry and image for the k8s sidecar
+      #     repository: ${loki:images:sidecar:registry}/${loki:images:sidecar:image}
+      #     tag: ${loki:images:sidecar:tag}
 
       memcached:
         nodeSelector: ${loki:globalNodeSelector}
         image:
           # -- Memcached Docker image repository
-          repository: ${loki:images:memcached:registry}/${loki:images:memcached:image}
-          tag: ${loki:images:memcached:tag}
+          repository: ${loki:images:memcached:registry}/${loki:images:memcached:repository}
+          # tag: ${loki:images:memcached:tag}
 
       memcachedExporter:
         nodeSelector: ${loki:globalNodeSelector}
         image:
-          repository: ${loki:images:memcachedExporter:registry}/${loki:images:memcachedExporter:image}
-          tag: ${loki:images:memcachedExporter:tag}
+          repository: ${loki:images:memcachedExporter:registry}/${loki:images:memcachedExporter:repository}
+          # tag: ${loki:images:memcachedExporter:tag}
 
       test:
         enabled: false

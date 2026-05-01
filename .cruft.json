@@ -1,13 +1,13 @@
 {
   "template": "https://github.com/projectsyn/commodore-component-template.git",
-  "commit": "c206dcdfb5acbbeb16560e770bcdf6564025256f",
+  "commit": "7e46facc758385bc32eeecab92b4639c66fd4e4f",
   "checkout": "main",
   "context": {
     "cookiecutter": {
       "name": "loki",
       "slug": "loki",
       "parameter_key": "loki",
-      "test_cases": "defaults",
+      "test_cases": "defaults legacy extra-config openshift",
       "add_lib": "n",
       "add_pp": "n",
       "add_golden": "y",
@@ -25,7 +25,7 @@
       "github_name": "component-loki",
       "github_url": "https://github.com/projectsyn/component-loki",
       "_template": "https://github.com/projectsyn/commodore-component-template.git",
-      "_commit": "c206dcdfb5acbbeb16560e770bcdf6564025256f"
+      "_commit": "7e46facc758385bc32eeecab92b4639c66fd4e4f"
     }
   },
   "directory": null

@@ -1,0 +1,470 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  annotations:
+    rollout-max-unavailable: '0'
+  labels:
+    app.kubernetes.io/component: ingester
+    app.kubernetes.io/instance: loki
+    app.kubernetes.io/name: loki
+    app.kubernetes.io/part-of: memberlist
+    app.kubernetes.io/version: 3.7.1
+    helm.sh/chart: loki-13.5.0
+    name: ingester-zone-a
+    rollout-group: ingester
+  name: loki-ingester-zone-a
+  namespace: syn-loki
+spec:
+  podManagementPolicy: Parallel
+  replicas: 0
+  revisionHistoryLimit: 10
+  selector:
+    matchLabels:
+      app.kubernetes.io/component: ingester
+      app.kubernetes.io/instance: loki
+      app.kubernetes.io/name: loki
+      name: ingester-zone-a
+      rollout-group: ingester
+  serviceName: loki-ingester-zone-a-headless
+  template:
+    metadata:
+      annotations:
+        checksum/config: 2be584c1a6cd312b997c0180efee53c606253c7368196d3827bcd641cdc3eee4
+        kubectl.kubernetes.io/default-container: ingester
+      labels:
+        app.kubernetes.io/component: ingester
+        app.kubernetes.io/instance: loki
+        app.kubernetes.io/name: loki
+        app.kubernetes.io/part-of: memberlist
+        app.kubernetes.io/version: 3.7.1
+        helm.sh/chart: loki-13.5.0
+        name: ingester-zone-a
+        rollout-group: ingester
+    spec:
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            - labelSelector:
+                matchExpressions:
+                  - key: rollout-group
+                    operator: In
+                    values:
+                      - ingester
+                  - key: name
+                    operator: NotIn
+                    values:
+                      - ingester-zone-a
+              topologyKey: kubernetes.io/hostname
+      automountServiceAccountToken: true
+      containers:
+        - args:
+            - -config.file=/etc/loki/config/config.yaml
+            - -config.expand-env=true
+            - -target=ingester
+            - -ingester.availability-zone=zone-a
+            - -ingester.unregister-on-shutdown=false
+            - -ingester.tokens-file-path=/var/loki/ring-tokens
+          env:
+            - name: GOGC
+              value: '80'
+            - name: HASH_RING_INSTANCE_ADDR
+              valueFrom:
+                fieldRef:
+                  fieldPath: status.podIP
+          image: docker.io/grafana/loki:3.7.1
+          imagePullPolicy: IfNotPresent
+          livenessProbe:
+            failureThreshold: 10
+            httpGet:
+              path: /loki/api/v1/status/buildinfo
+              port: http-metrics
+            periodSeconds: 30
+            successThreshold: 1
+            timeoutSeconds: 1
+          name: ingester
+          ports:
+            - containerPort: 3100
+              name: http-metrics
+              protocol: TCP
+            - containerPort: 9095
+              name: grpc
+              protocol: TCP
+            - containerPort: 7946
+              name: http-memberlist
+              protocol: TCP
+          readinessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /ready
+              port: http-metrics
+            initialDelaySeconds: 15
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 1
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+                - ALL
+            readOnlyRootFilesystem: true
+            seccompProfile:
+              type: RuntimeDefault
+          volumeMounts:
+            - mountPath: /etc/loki/config
+              name: config
+            - mountPath: /etc/loki/runtime-config
+              name: runtime-config
+            - mountPath: /var/loki
+              name: data
+            - mountPath: /tmp
+              name: temp
+      enableServiceLinks: true
+      securityContext:
+        fsGroup: 10001
+        fsGroupChangePolicy: OnRootMismatch
+        runAsGroup: 10001
+        runAsNonRoot: true
+        runAsUser: 10001
+        seccompProfile:
+          type: RuntimeDefault
+      serviceAccountName: loki
+      terminationGracePeriodSeconds: 300
+      topologySpreadConstraints:
+        - labelSelector:
+            matchLabels:
+              app.kubernetes.io/component: ingester
+              app.kubernetes.io/instance: loki
+              app.kubernetes.io/name: loki
+          maxSkew: 1
+          topologyKey: kubernetes.io/hostname
+          whenUnsatisfiable: ScheduleAnyway
+      volumes:
+        - emptyDir: {}
+          name: temp
+        - configMap:
+            items:
+              - key: config.yaml
+                path: config.yaml
+            name: loki
+          name: config
+        - configMap:
+            name: loki-runtime
+          name: runtime-config
+        - emptyDir: {}
+          name: data
+  updateStrategy:
+    type: RollingUpdate
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  annotations:
+    rollout-max-unavailable: '0'
+  labels:
+    app.kubernetes.io/component: ingester
+    app.kubernetes.io/instance: loki
+    app.kubernetes.io/name: loki
+    app.kubernetes.io/part-of: memberlist
+    app.kubernetes.io/version: 3.7.1
+    helm.sh/chart: loki-13.5.0
+    name: ingester-zone-b
+    rollout-group: ingester
+  name: loki-ingester-zone-b
+  namespace: syn-loki
+spec:
+  podManagementPolicy: Parallel
+  replicas: 0
+  revisionHistoryLimit: 10
+  selector:
+    matchLabels:
+      app.kubernetes.io/component: ingester
+      app.kubernetes.io/instance: loki
+      app.kubernetes.io/name: loki
+      name: ingester-zone-b
+      rollout-group: ingester
+  serviceName: loki-ingester-zone-b-headless
+  template:
+    metadata:
+      annotations:
+        checksum/config: 2be584c1a6cd312b997c0180efee53c606253c7368196d3827bcd641cdc3eee4
+        kubectl.kubernetes.io/default-container: ingester
+      labels:
+        app.kubernetes.io/component: ingester
+        app.kubernetes.io/instance: loki
+        app.kubernetes.io/name: loki
+        app.kubernetes.io/part-of: memberlist
+        app.kubernetes.io/version: 3.7.1
+        helm.sh/chart: loki-13.5.0
+        name: ingester-zone-b
+        rollout-group: ingester
+    spec:
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            - labelSelector:
+                matchExpressions:
+                  - key: rollout-group
+                    operator: In
+                    values:
+                      - ingester
+                  - key: name
+                    operator: NotIn
+                    values:
+                      - ingester-zone-b
+              topologyKey: kubernetes.io/hostname
+      automountServiceAccountToken: true
+      containers:
+        - args:
+            - -config.file=/etc/loki/config/config.yaml
+            - -config.expand-env=true
+            - -target=ingester
+            - -ingester.availability-zone=zone-b
+            - -ingester.unregister-on-shutdown=false
+            - -ingester.tokens-file-path=/var/loki/ring-tokens
+          env:
+            - name: GOGC
+              value: '80'
+            - name: HASH_RING_INSTANCE_ADDR
+              valueFrom:
+                fieldRef:
+                  fieldPath: status.podIP
+          image: docker.io/grafana/loki:3.7.1
+          imagePullPolicy: IfNotPresent
+          livenessProbe:
+            failureThreshold: 10
+            httpGet:
+              path: /loki/api/v1/status/buildinfo
+              port: http-metrics
+            periodSeconds: 30
+            successThreshold: 1
+            timeoutSeconds: 1
+          name: ingester
+          ports:
+            - containerPort: 3100
+              name: http-metrics
+              protocol: TCP
+            - containerPort: 9095
+              name: grpc
+              protocol: TCP
+            - containerPort: 7946
+              name: http-memberlist
+              protocol: TCP
+          readinessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /ready
+              port: http-metrics
+            initialDelaySeconds: 15
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 1
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+                - ALL
+            readOnlyRootFilesystem: true
+            seccompProfile:
+              type: RuntimeDefault
+          volumeMounts:
+            - mountPath: /etc/loki/config
+              name: config
+            - mountPath: /etc/loki/runtime-config
+              name: runtime-config
+            - mountPath: /var/loki
+              name: data
+            - mountPath: /tmp
+              name: temp
+      enableServiceLinks: true
+      securityContext:
+        fsGroup: 10001
+        fsGroupChangePolicy: OnRootMismatch
+        runAsGroup: 10001
+        runAsNonRoot: true
+        runAsUser: 10001
+        seccompProfile:
+          type: RuntimeDefault
+      serviceAccountName: loki
+      terminationGracePeriodSeconds: 300
+      topologySpreadConstraints:
+        - labelSelector:
+            matchLabels:
+              app.kubernetes.io/component: ingester
+              app.kubernetes.io/instance: loki
+              app.kubernetes.io/name: loki
+          maxSkew: 1
+          topologyKey: kubernetes.io/hostname
+          whenUnsatisfiable: ScheduleAnyway
+      volumes:
+        - emptyDir: {}
+          name: temp
+        - configMap:
+            items:
+              - key: config.yaml
+                path: config.yaml
+            name: loki
+          name: config
+        - configMap:
+            name: loki-runtime
+          name: runtime-config
+        - emptyDir: {}
+          name: data
+  updateStrategy:
+    type: RollingUpdate
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  annotations:
+    rollout-max-unavailable: '0'
+  labels:
+    app.kubernetes.io/component: ingester
+    app.kubernetes.io/instance: loki
+    app.kubernetes.io/name: loki
+    app.kubernetes.io/part-of: memberlist
+    app.kubernetes.io/version: 3.7.1
+    helm.sh/chart: loki-13.5.0
+    name: ingester-zone-c
+    rollout-group: ingester
+  name: loki-ingester-zone-c
+  namespace: syn-loki
+spec:
+  podManagementPolicy: Parallel
+  replicas: 0
+  revisionHistoryLimit: 10
+  selector:
+    matchLabels:
+      app.kubernetes.io/component: ingester
+      app.kubernetes.io/instance: loki
+      app.kubernetes.io/name: loki
+      name: ingester-zone-c
+      rollout-group: ingester
+  serviceName: loki-ingester-zone-c-headless
+  template:
+    metadata:
+      annotations:
+        checksum/config: 2be584c1a6cd312b997c0180efee53c606253c7368196d3827bcd641cdc3eee4
+        kubectl.kubernetes.io/default-container: ingester
+      labels:
+        app.kubernetes.io/component: ingester
+        app.kubernetes.io/instance: loki
+        app.kubernetes.io/name: loki
+        app.kubernetes.io/part-of: memberlist
+        app.kubernetes.io/version: 3.7.1
+        helm.sh/chart: loki-13.5.0
+        name: ingester-zone-c
+        rollout-group: ingester
+    spec:
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            - labelSelector:
+                matchExpressions:
+                  - key: rollout-group
+                    operator: In
+                    values:
+                      - ingester
+                  - key: name
+                    operator: NotIn
+                    values:
+                      - ingester-zone-c
+              topologyKey: kubernetes.io/hostname
+      automountServiceAccountToken: true
+      containers:
+        - args:
+            - -config.file=/etc/loki/config/config.yaml
+            - -config.expand-env=true
+            - -target=ingester
+            - -ingester.availability-zone=zone-c
+            - -ingester.unregister-on-shutdown=false
+            - -ingester.tokens-file-path=/var/loki/ring-tokens
+          env:
+            - name: GOGC
+              value: '80'
+            - name: HASH_RING_INSTANCE_ADDR
+              valueFrom:
+                fieldRef:
+                  fieldPath: status.podIP
+          image: docker.io/grafana/loki:3.7.1
+          imagePullPolicy: IfNotPresent
+          livenessProbe:
+            failureThreshold: 10
+            httpGet:
+              path: /loki/api/v1/status/buildinfo
+              port: http-metrics
+            periodSeconds: 30
+            successThreshold: 1
+            timeoutSeconds: 1
+          name: ingester
+          ports:
+            - containerPort: 3100
+              name: http-metrics
+              protocol: TCP
+            - containerPort: 9095
+              name: grpc
+              protocol: TCP
+            - containerPort: 7946
+              name: http-memberlist
+              protocol: TCP
+          readinessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /ready
+              port: http-metrics
+            initialDelaySeconds: 15
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 1
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+                - ALL
+            readOnlyRootFilesystem: true
+            seccompProfile:
+              type: RuntimeDefault
+          volumeMounts:
+            - mountPath: /etc/loki/config
+              name: config
+            - mountPath: /etc/loki/runtime-config
+              name: runtime-config
+            - mountPath: /var/loki
+              name: data
+            - mountPath: /tmp
+              name: temp
+      enableServiceLinks: true
+      securityContext:
+        fsGroup: 10001
+        fsGroupChangePolicy: OnRootMismatch
+        runAsGroup: 10001
+        runAsNonRoot: true
+        runAsUser: 10001
+        seccompProfile:
+          type: RuntimeDefault
+      serviceAccountName: loki
+      terminationGracePeriodSeconds: 300
+      topologySpreadConstraints:
+        - labelSelector:
+            matchLabels:
+              app.kubernetes.io/component: ingester
+              app.kubernetes.io/instance: loki
+              app.kubernetes.io/name: loki
+          maxSkew: 1
+          topologyKey: kubernetes.io/hostname
+          whenUnsatisfiable: ScheduleAnyway
+      volumes:
+        - emptyDir: {}
+          name: temp
+        - configMap:
+            items:
+              - key: config.yaml
+                path: config.yaml
+            name: loki
+          name: config
+        - configMap:
+            name: loki-runtime
+          name: runtime-config
+        - emptyDir: {}
+          name: data
+  updateStrategy:
+    type: RollingUpdate
