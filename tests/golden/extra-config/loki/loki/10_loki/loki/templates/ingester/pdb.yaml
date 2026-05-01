@@ -1,0 +1,23 @@
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  labels:
+    app.kubernetes.io/component: ingester
+    app.kubernetes.io/instance: loki
+    app.kubernetes.io/name: loki
+    app.kubernetes.io/version: 3.7.1
+    helm.sh/chart: loki-13.5.0
+  name: loki-ingester
+  namespace: syn-loki
+spec:
+  maxUnavailable: 1
+  selector:
+    matchExpressions:
+      - key: rollout-group
+        operator: NotIn
+        values:
+          - ingester
+    matchLabels:
+      app.kubernetes.io/component: ingester
+      app.kubernetes.io/instance: loki
+      app.kubernetes.io/name: loki

@@ -31,6 +31,430 @@ namespace:
 The namespace in which to deploy this component.
 
 
+== `charts`
+
+[horizontal]
+type:: dict
+default::
++
+[source,yaml]
+----
+charts:
+  loki:
+    source: https://grafana-community.github.io/helm-charts
+    version: v13.5.0
+----
+
+Holds the reference to the used version of the charts.
+See https://github.com/projectsyn/component-loki/blob/master/class/defaults.yml[class/defaults.yml] for the current version.
+
+
+== `images`
+
+[horizontal]
+type:: dict
+default::
++
+[source,yaml]
+----
+images:
+  loki:
+    registry: docker.io
+    repository: grafana/loki
+  memcached:
+    registry: docker.io
+    repository: library/memcached
+  memcachedExporter:
+    registry: docker.io
+    repository: prom/memcached-exporter
+  nginx:
+    registry: docker.io
+    repository: nginxinc/nginx-unprivileged
+----
+example::
++
+[source,yaml]
+----
+images:
+  loki:
+    registry: my-docker-cache.example.org
+    tag: latest
+  memcached:
+    tag: latest
+  memcachedExporter:
+    tag: latest
+  nginx:
+    tag: latest
+----
+
+Configures the image registry, repository and tag.
+
+[TIP]
+====
+If the `tag` parameter is not set, the one from the Helm chart will be used.
+====
+
+
+== `preset`
+
+[horizontal]
+type:: string
+default:: `extra-small`
+
+Choose a preset for scaling the Loki components.
+
+Available options: none, extra-small.
+
+
+
+== `components`
+
+Configuration of the different Loki components.
+
+[TIP]
+====
+The values of each component reflect the corresponding sections in the Helm charts `values.yaml` file.
+====
+
+Read path: querier, queryFrontend, queryScheduler.
+Write path: distributor, ingester.
+Backend: compactor, indexGateway.
+Ingress: gateway.
+Optional: alertmanager, overridesExporter, patternIngester, ruler.
+Experimental: bloomGateway, bloomPlanner, bloomBuilder
+
+=== `components.querier`
+
+[horizontal]
+type:: dict
+default::
++
+[source,yaml]
+----
+components:
+  querier:
+    enabled: true
+----
+
+The querier service is responsible for executing Log Query Language (LogQL) queries.
+The querier can handle HTTP requests from the client directly or pull subqueries from the query frontend or query scheduler.
+
+=== `components.queryFrontend`
+
+[horizontal]
+type:: dict
+default::
++
+[source,yaml]
+----
+components:
+  queryFrontend:
+    enabled: true
+----
+
+The query frontend is an optional service providing the querier’s API endpoints and can be used to accelerate the read path.
+When the query frontend is in place, incoming query requests should be directed to the query frontend instead of the queriers.
+The querier service will be still required within the cluster, in order to execute the actual queries.
+
+=== `components.queryScheduler`
+
+[horizontal]
+type:: dict
+default::
++
+[source,yaml]
+----
+components:
+  queryScheduler:
+    enabled: true
+----
+
+The query scheduler is an optional service providing more advanced queuing functionality than the query frontend.
+When using this component in the Loki deployment, query frontend pushes split up queries to the query scheduler which enqueues them in an internal in-memory queue.
+
+=== `components.distributor`
+
+[horizontal]
+type:: dict
+default::
++
+[source,yaml]
+----
+components:
+  distributor:
+    enabled: true
+----
+
+The distributor service is responsible for handling incoming push requests from clients.
+It’s the first step in the write path for log data.
+
+=== `components.ingester`
+
+[horizontal]
+type:: dict
+default::
++
+[source,yaml]
+----
+components:
+  ingester:
+    enabled: true
+----
+
+The ingester service is responsible for persisting data and shipping it to long-term S3 storage on the write path,
+and returning recently ingested, in-memory log data for queries on the read path.
+
+
+=== `components.compactor`
+
+[horizontal]
+type:: dict
+default::
++
+[source,yaml]
+----
+components:
+  compactor:
+    enabled: true
+----
+
+The compactor service is used to compact the multiple index files produced by the ingesters and shipped to object storage into single index files per day and tenant.
+This makes index lookups more efficient.
+
+=== `components.indexGateway`
+
+[horizontal]
+type:: dict
+default::
++
+[source,yaml]
+----
+components:
+  indexGateway:
+    enabled: true
+----
+
+The index gateway service is responsible for handling and serving metadata queries.
+Metadata queries are queries that look up data from the index.
+
+=== `components.gateway`
+
+[horizontal]
+type:: dict
+default::
++
+[source,yaml]
+----
+components:
+  gateway:
+    enabled: true
+----
+
+The Loki gateway is a critical component for query, write, and alert paths.
+It improves performance and simplifies deployments by acting as a single entry point for all Loki requests.
+
+=== `components.alertmanager`
+
+[horizontal]
+type:: dict
+default::
++
+[source,yaml]
+----
+components:
+  alertmanager:
+    enabled: true
+----
+
+The Loki Alertmanager is an optional component that accepts alert notifications from the Loki ruler.
+
+=== `components.overridesExporter`
+
+[horizontal]
+type:: dict
+default::
++
+[source,yaml]
+----
+components:
+  overridesExporter:
+    enabled: true
+----
+
+Grafana Loki supports applying overrides on a per-tenant basis.
+A number of overrides configure limits that prevent a single tenant from using too many resources.
+The overrides-exporter component exposes limits as Prometheus metrics so that operators can understand how close tenants are to their limits.
+
+=== `components.patternIngester`
+
+[horizontal]
+type:: dict
+default::
++
+[source,yaml]
+----
+components:
+  patternIngester:
+    enabled: false
+----
+
+The optional pattern ingester component receives log data from the ingesters and scans the logs to detect and aggregate patterns.
+This can be useful for understanding the structure of your logs at scale.
+The pattern ingester is used by the pattern feature in Logs Drilldown, which lets you detect similar log lines and add or exclude them from your search.
+
+=== `components.ruler`
+
+[horizontal]
+type:: dict
+default::
++
+[source,yaml]
+----
+components:
+  ruler:
+    enabled: false
+----
+
+The ruler service manages and evaluates rule and/or alert expressions provided in a rule configuration.
+
+
+== `caches`
+
+Configuration of the cache components of Loki.
+Caching is optional, but highly recommended in a production environment.
+
+[TIP]
+====
+The values of each component reflect the corresponding sections in the Helm charts `values.yaml` file.
+====
+
+=== `caches.chunks`
+
+[horizontal]
+type:: dict
+default::
++
+[source,yaml]
+----
+caches:
+  chunks:
+    enabled: true
+----
+
+The chunks are cached using the `chunkRef` as the cache key, which is the unique reference to a chunk when it’s cut in the Loki ingesters.
+The chunk cache is consulted by queriers each time a set of `chunkRefs` are calculated to serve the query, before going to the storage layer.
+
+=== `caches.results`
+
+[horizontal]
+type:: dict
+default::
++
+[source,yaml]
+----
+caches:
+  results:
+    enabled: true
+----
+
+The results cache stores the results for index-stat, instant-metric, label and volume queries and it supports negative caching for log queries.
+It is sometimes called frontend cache in some configurations.
+
+
+== `experimental`
+
+Configuration of the experimental components of Loki.
+
+IMPORTANT: This is are experimental features, use at your own discretion.
+
+[TIP]
+====
+The values of each component reflect the corresponding sections in the Helm charts `values.yaml` file.
+====
+
+=== `experimental.bloomPlanner`
+
+[horizontal]
+type:: dict
+default::
++
+[source,yaml]
+----
+caches:
+  bloomPlanner:
+    enabled: false
+----
+
+The Bloom Planner service is responsible for planning the tasks for blooms creation.
+It runs as a singleton and provides a queue from which tasks are pulled by the Bloom Builders.
+The planning runs periodically and takes into account what blooms have already been built for a given day and tenant and what series need to be newly added.
+
+=== `experimental.bloomBuilder`
+
+[horizontal]
+type:: dict
+default::
++
+[source,yaml]
+----
+caches:
+  bloomBuilder:
+    enabled: false
+----
+
+The Bloom Builder service is responsible for processing the tasks created by the Bloom Planner.
+The Bloom Builder creates bloom blocks from structured metadata of log entries.
+The resulting blooms are grouped in bloom blocks spanning multiple series and chunks from a given day.
+This component also builds metadata files to track which blocks are available for each series and TSDB index file.
+
+=== `experimental.bloomGateway`
+
+[horizontal]
+type:: dict
+default::
++
+[source,yaml]
+----
+caches:
+  bloomGateway:
+    enabled: false
+----
+
+The Bloom Gateway service is responsible for handling and serving chunks filtering requests.
+The index gateway queries the Bloom Gateway when computing chunk references, or when computing shards for a given query.
+The gateway service takes a list of chunks and a filtering expression and matches them against the blooms,
+filtering out any chunks that do not match the given label filter expression.
+
+
+== `global`
+
+Configure global settings.
+
+=== `global.nodeSelector`
+
+[horizontal]
+type:: dict
+default::
++
+[source,yaml]
+----
+global:
+  nodeSelector: {}
+----
+example::
++
+[source,yaml]
+----
+global:
+  nodeSelector:
+    appuio.io/node-class: plus
+----
+
+Node selector configuration which is used for each component's `nodeSelector` field in parameter `helm_values`.
+
+This value is used verbatim as a Kubernetes node selector.
+
+
 == `secrets`
 
 [horizontal]
@@ -51,33 +475,6 @@ A dict of secrets to create in the namespace. The key is the name of the secret,
 The value must be a dict with a key `stringData` which is a dict of key/value pairs to add to the secret.
 
 Holds the secrets for the S3 bucket by default.
-
-
-== `globalNodeSelector`
-
-[horizontal]
-type:: dict
-default:: `{}`
-
-Node selector configuration which is used for each component's `nodeSelector` field in parameter `helm_values`.
-
-This value is used verbatim as a Kubernetes node selector.
-
-
-== `charts`
-
-[horizontal]
-type:: dict
-default::
-+
-[source,yaml]
-----
-charts:
-  loki: "<CURRENT VERSION>"
-----
-
-Holds the reference to the used version of the charts.
-See https://github.com/projectsyn/component-loki/blob/master/class/defaults.yml[class/defaults.yml] for the current version.
 
 
 == `alerts`

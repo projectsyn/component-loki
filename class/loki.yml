@@ -18,17 +18,21 @@ parameters:
         output_path: ${_instance}/
 
       # Helm chart
-      # - input_type: jsonnet
-      #   input_paths:
-      #     - ${_base_directory}/component/helm_presets.jsonnet
-      #     - ${_base_directory}/component/helm_values.jsonnet
-      #   output_path: ${_base_directory}/helmcharts/loki/${loki:charts:loki:version}/
+      - input_type: jsonnet
+        input_paths:
+          - ${_base_directory}/component/helm_presets.jsonnet
+          - ${_base_directory}/component/helm_values.jsonnet
+        output_path: ${_base_directory}/helmcharts/loki/${loki:charts:loki:version}/
       - input_type: helm
         output_type: yaml
         input_paths:
           - ${_base_directory}/helmcharts/loki/${loki:charts:loki:version}
-        output_path: ${_instance}/10_helm_loki
-        helm_values: ${loki:helm_values}
+        output_path: ${_instance}/10_loki
+        helm_values_files:
+          - ${_base_directory}/helmcharts/loki/${loki:charts:loki:version}/${loki:preset}.yaml
+          - ${_base_directory}/helmcharts/loki/${loki:charts:loki:version}/${_instance}-components.yaml
+          - ${_base_directory}/helmcharts/loki/${loki:charts:loki:version}/${_instance}-configs.yaml
+          - ${_base_directory}/helmcharts/loki/${loki:charts:loki:version}/${_instance}-overrides.yaml
         helm_params:
           name: ${_instance}
           namespace: ${loki:namespace:name}

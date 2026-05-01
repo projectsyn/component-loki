@@ -17,7 +17,7 @@ parameters:
     images:
       loki:
         registry: docker.io
-        repository: grafana/mimir
+        repository: grafana/loki
       memcached:
         registry: docker.io
         repository: library/memcached
@@ -28,6 +28,62 @@ parameters:
         registry: docker.io
         repository: nginxinc/nginx-unprivileged
 
+    preset: extra-small
+
+    components:
+      # Read Path
+      querier:
+        enabled: true
+      queryFrontend:
+        enabled: true
+      queryScheduler:
+        enabled: true
+      # storeGateway:
+      #   enabled: true
+      # Write Path
+      distributor:
+        enabled: true
+      ingester:
+        enabled: true
+      # Backend
+      compactor:
+        enabled: true
+      indexGateway:
+        enabled: true
+      # Ingress
+      gateway:
+        enabled: true
+      # Optional
+      alertmanager:
+        enabled: true
+      overridesExporter:
+        enabled: true
+      patternIngester:
+        enabled: false
+      ruler:
+        enabled: false
+
+    caches:
+      chunks:
+        enabled: true
+      results:
+        enabled: true
+
+    experimental:
+      # Experimental
+      bloomPlanner:
+        enabled: false
+      bloomBuilder:
+        enabled: false
+      bloomGateway:
+        enabled: false
+
+    global:
+      nodeSelector: {}
+      zoneAwareReplication:
+        enabled: false
+        topologyKey: 'kubernetes.io/hostname'
+
     secrets:
       loki-bucket-secret:
         stringData:
@@ -35,73 +91,16 @@ parameters:
           S3_SECRET_ACCESS_KEY: null
           S3_ENDPOINT: null
 
-    globalNodeSelector: {}
-
-    # charts:
-    #   loki: "6.53.0"
-
     alerts:
       additionalRules: {}
       patchRules:
         ignoreNames: []
         patches: {}
 
-    # images:
-    #   global:
-    #     registry: docker.io
-    #   sidecar:
-    #     # -- The Docker registry and image for the k8s sidecar
-    #     registry: ${loki:images:global:registry}
-    #     image: kiwigrid/k8s-sidecar
-    #     tag: 1.27.5
-
-      # memcached:
-      #   # -- Memcached Docker image repository
-      #   registry: ${loki:images:global:registry}
-      #   image: library/memcached
-      #   tag: 1.6.23-alpine
-
-      # memcachedExporter:
-      #   registry: ${loki:images:global:registry}
-      #   image: prom/memcached-exporter
-      #   tag: v0.14.2
-
-    helm_values:
-      deploymentMode: Distributed
-      loki:
-        schemaConfig:
-          configs:
-            - from: 2024-04-01
-              store: tsdb
-              object_store: s3
-              schema: v13
-              index:
-                prefix: loki_index_
-                period: 24h
-        storage:
-          type: s3
-          bucketNames:
-            chunks: ${_instance}-chunks
-            ruler: ${_instance}-ruler
-            admin: ${_instance}-loki-admin
+    helm_values: {}
 
     helm_old:
       loki:
-        schemaConfig:
-          configs:
-            - from: 2024-04-01
-              store: tsdb
-              object_store: s3
-              schema: v13
-              index:
-                prefix: loki_index_
-                period: 24h
-        ingester:
-          chunk_encoding: snappy
-        tracing:
-          enabled: true
-        querier:
-          max_concurrent: 4
 
         storage:
           type: s3
@@ -123,96 +122,12 @@ parameters:
         limits_config:
           retention_period: 30d
 
-      deploymentMode: SimpleScalable
-
-      backend:
-        extraEnvFrom:
-          - secretRef:
-              name: loki-bucket-secret
-        extraArgs:
-          - '-config.expand-env=true'
-        nodeSelector: ${loki:globalNodeSelector}
-        replicas: 3
-        resources:
-          limits:
-            cpu: 2
-            memory: 2Gi
-          requests:
-            cpu: 0.5
-            memory: 1Gi
-      read:
-        extraEnvFrom:
-          - secretRef:
-              name: loki-bucket-secret
-        extraArgs:
-          - '-config.expand-env=true'
-        nodeSelector: ${loki:globalNodeSelector}
-        replicas: 2
-        resources:
-          limits:
-            memory: 4Gi
-          requests:
-            cpu: 1
-            memory: 3Gi
-      write:
-        extraEnvFrom:
-          - secretRef:
-              name: loki-bucket-secret
-        extraArgs:
-          - '-config.expand-env=true'
-        nodeSelector: ${loki:globalNodeSelector}
-        replicas: 3
-        resources:
-          limits:
-            cpu: 3
-            memory: 8Gi
-          requests:
-            cpu: 1
-            memory: 4Gi
-
-      # Disable minio storage
-      minio:
-        enabled: false
-
-      # Zero out replica counts of other deployment modes
-      singleBinary:
-        replicas: 0
-
-      ingester:
-        nodeSelector: ${loki:globalNodeSelector}
-        replicas: 0
-      querier:
-        nodeSelector: ${loki:globalNodeSelector}
-        replicas: 0
-      queryFrontend:
-        nodeSelector: ${loki:globalNodeSelector}
-        replicas: 0
-      queryScheduler:
-        nodeSelector: ${loki:globalNodeSelector}
-        replicas: 0
-      distributor:
-        nodeSelector: ${loki:globalNodeSelector}
-        replicas: 0
-      compactor:
-        nodeSelector: ${loki:globalNodeSelector}
-        replicas: 0
-        retention_enabled: true
-      indexGateway:
-        nodeSelector: ${loki:globalNodeSelector}
-        replicas: 0
-      bloomCompactor:
-        nodeSelector: ${loki:globalNodeSelector}
-        replicas: 0
-      bloomGateway:
-        nodeSelector: ${loki:globalNodeSelector}
-        replicas: 0
       gateway:
         extraEnvFrom:
           - secretRef:
               name: loki-bucket-secret
         extraArgs:
           - '-config.expand-env=true'
-        nodeSelector: ${loki:globalNodeSelector}
         replicas: 2
 
       rbac.pspEnabled: false
@@ -226,33 +141,3 @@ parameters:
           - '-config.expand-env=true'
         dnsService: dns-default
         dnsNamespace: openshift-dns
-
-        image:
-          # -- Overrides the Docker registry globally for all images
-          registry: ${loki:images:loki:registry}
-
-      # sidecar:
-      #   nodeSelector: ${loki:globalNodeSelector}
-      #   image:
-      #     # -- The Docker registry and image for the k8s sidecar
-      #     repository: ${loki:images:sidecar:registry}/${loki:images:sidecar:image}
-      #     tag: ${loki:images:sidecar:tag}
-
-      memcached:
-        nodeSelector: ${loki:globalNodeSelector}
-        image:
-          # -- Memcached Docker image repository
-          repository: ${loki:images:memcached:registry}/${loki:images:memcached:repository}
-          # tag: ${loki:images:memcached:tag}
-
-      memcachedExporter:
-        nodeSelector: ${loki:globalNodeSelector}
-        image:
-          repository: ${loki:images:memcachedExporter:registry}/${loki:images:memcachedExporter:repository}
-          # tag: ${loki:images:memcachedExporter:tag}
-
-      test:
-        enabled: false
-
-      lokiCanary:
-        enabled: false
