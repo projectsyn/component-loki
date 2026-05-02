@@ -24,7 +24,7 @@ spec:
   template:
     metadata:
       annotations:
-        checksum/config: fbfc1a5781ba67b4c120f90f6a6ed0646e9b752445eedf210544177d0ad1d7b7
+        checksum/config: f549e2846948ee51b60ca7ac4c62c8a0970a6a0dd2d4773f80d31ecf588f4514
         kubectl.kubernetes.io/default-container: query-frontend
       labels:
         app.kubernetes.io/component: query-frontend
@@ -49,6 +49,7 @@ spec:
             - -config.file=/etc/loki/config/config.yaml
             - -config.expand-env=true
             - -target=query-frontend
+            - -config.expand-env=true
           env:
             - name: GOMEMLIMIT
               value: 1740MiB
@@ -58,6 +59,9 @@ spec:
               valueFrom:
                 fieldRef:
                   fieldPath: status.podIP
+          envFrom:
+            - secretRef:
+                name: loki-bucket-secret
           image: docker.io/grafana/loki:3.7.1
           imagePullPolicy: IfNotPresent
           livenessProbe:

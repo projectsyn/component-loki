@@ -32,9 +32,12 @@ data:
       replication_factor: 3
       storage:
         s3:
+          access_key_id: ${S3_SECRET_ACCESS_KEY}
           bucketnames: loki-chunks
+          endpoint: objects.rma.cloudscale.ch
           insecure: false
-          s3forcepathstyle: false
+          s3forcepathstyle: true
+          secret_access_key: ${S3_ACCESS_KEY_ID}
     frontend:
       scheduler_address: loki-query-scheduler.syn-loki.svc.cluster.local:9095
       tail_proxy_url: http://loki-querier.syn-loki.svc.cluster.local:3100

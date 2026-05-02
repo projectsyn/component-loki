@@ -36,6 +36,7 @@ spec:
             - -tenant-id=self-monitoring
             - -pass=
             - -push=true
+            - -config.expand-env=true
           env:
             - name: POD_NAME
               valueFrom:
@@ -47,6 +48,9 @@ spec:
               valueFrom:
                 fieldRef:
                   fieldPath: status.podIP
+          envFrom:
+            - secretRef:
+                name: loki-bucket-secret
           image: docker.io/grafana/loki-canary:3.7.1
           imagePullPolicy: IfNotPresent
           livenessProbe:

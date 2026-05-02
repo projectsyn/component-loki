@@ -84,12 +84,23 @@ parameters:
         enabled: false
         topologyKey: 'kubernetes.io/hostname'
 
-    secrets:
-      loki-bucket-secret:
-        stringData:
-          S3_ACCESS_KEY_ID: null
-          S3_SECRET_ACCESS_KEY: null
-          S3_ENDPOINT: null
+    s3:
+      bucketPrefix: ${_instance}
+      endpoint: null
+      region: null
+      insecure: false
+      auth:
+        accessKeyId: '?{vaultkv:${cluster:tenant}/${cluster:name}/${_instance}/s3_access_key}'
+        secretAccessKey: '?{vaultkv:${cluster:tenant}/${cluster:name}/${_instance}/s3_secret_key}'
+        #increase if auth credentials change
+        secretVersion: 0
+
+    secrets: {}
+      # loki-bucket-secret:
+      #   stringData:
+      #     S3_ACCESS_KEY_ID: null
+      #     S3_SECRET_ACCESS_KEY: null
+      #     S3_ENDPOINT: null
 
     alerts:
       additionalRules: {}
@@ -101,19 +112,6 @@ parameters:
 
     helm_old:
       loki:
-
-        storage:
-          type: s3
-          bucketNames:
-            chunks: ${_instance}-chunks
-            ruler: ${_instance}-ruler
-            admin: ${_instance}-loki-admin
-          s3:
-            endpoint: \${S3_ENDPOINT}
-            secretAccessKey: \${S3_SECRET_ACCESS_KEY}
-            accessKeyId: \${S3_ACCESS_KEY_ID}
-            s3ForcePathStyle: true
-
         podSecurityContext:
           fsGroup: null
           runAsGroup: null
@@ -122,22 +120,9 @@ parameters:
         limits_config:
           retention_period: 30d
 
-      gateway:
-        extraEnvFrom:
-          - secretRef:
-              name: loki-bucket-secret
-        extraArgs:
-          - '-config.expand-env=true'
-        replicas: 2
-
       rbac.pspEnabled: false
       rbac.sccEnabled: true
 
       global:
-        extraEnvFrom:
-          - secretRef:
-              name: loki-bucket-secret
-        extraArgs:
-          - '-config.expand-env=true'
         dnsService: dns-default
         dnsNamespace: openshift-dns

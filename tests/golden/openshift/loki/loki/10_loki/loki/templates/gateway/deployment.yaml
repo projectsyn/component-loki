@@ -10,7 +10,7 @@ metadata:
   name: loki-gateway
   namespace: syn-loki
 spec:
-  replicas: 1
+  replicas: 2
   revisionHistoryLimit: 10
   selector:
     matchLabels:
@@ -39,7 +39,10 @@ spec:
               topologyKey: kubernetes.io/hostname
       automountServiceAccountToken: false
       containers:
-        - image: docker.io/nginxinc/nginx-unprivileged:1.30-alpine
+        - envFrom:
+            - secretRef:
+                name: loki-bucket-secret
+          image: docker.io/nginxinc/nginx-unprivileged:1.30-alpine
           imagePullPolicy: IfNotPresent
           name: nginx
           ports:

@@ -23,7 +23,8 @@ spec:
   serviceName: loki-chunks-cache
   template:
     metadata:
-      annotations: null
+      annotations:
+        bucketSecretVersion: '0'
       labels:
         app.kubernetes.io/component: memcached-chunks-cache
         app.kubernetes.io/instance: loki
@@ -40,7 +41,9 @@ spec:
             - -v
             - -u 11211
           env: null
-          envFrom: null
+          envFrom:
+            - secretRef:
+                name: loki-bucket-secret
           image: docker.io/library/memcached:1.6.41-alpine
           imagePullPolicy: IfNotPresent
           livenessProbe:

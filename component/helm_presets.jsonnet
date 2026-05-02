@@ -24,7 +24,9 @@ assert std.member([ 'none', 'extra-small' ], params.preset) : 'params.preset mus
     singleBinary: {
       replicas: 0,
     },
-
+    gateway: {
+      replicas: 2,
+    },
     querier: {
       replicas: 3,
       resources: {

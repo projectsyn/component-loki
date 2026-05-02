@@ -52,6 +52,8 @@ local components = com.makeMergeable({
   // Ingress Configuration
   gateway: {
     [if params.components.gateway.enabled then 'enabledNonEnterprise']: params.components.gateway.enabled,
+    extraEnvFrom: [ { secretRef: { name: '%s-bucket-secret' % inv.parameters._instance } } ],
+    extraArgs: [ '-config.expand-env=true' ],
     nodeSelector: std.get(params.components.gateway, 'nodeSelector', globalConfig.nodeSelector),
   } + com.makeMergeable(params.components.gateway),
   // "Optional" components
@@ -80,7 +82,7 @@ local caches = com.makeMergeable({
 });
 
 // Experimental
-local caches = com.makeMergeable({
+local experimental = com.makeMergeable({
   bloomPlanner: {
     nodeSelector: std.get(params.experimental.bloomPlanner, 'nodeSelector', globalConfig.nodeSelector),
   } + com.makeMergeable(params.experimental.bloomPlanner),
@@ -144,16 +146,13 @@ local images = com.makeMergeable({
 });
 
 local global = com.makeMergeable({
-  //   global: {
-  //     extraEnvFrom: [ {
-  //       secretRef: {
-  //         name: '%s-bucket-secret' % inv.parameters._instance,
-  //       },
-  //     } ],
-  //     podAnnotations: {
-  //       bucketSecretVersion: '%s' % params.s3.auth.secretVersion,
-  //     },
-  //   },
+    global: {
+      extraEnvFrom: [ { secretRef: { name: '%s-bucket-secret' % inv.parameters._instance } } ],
+      extraArgs: [ '-config.expand-env=true' ],
+      podAnnotations: {
+        bucketSecretVersion: '%s' % params.s3.auth.secretVersion,
+      },
+    },
   //   [if params.monitoring then 'metaMonitoring']: {
   //     serviceMonitor: {
   //       enabled: params.monitoring,
@@ -163,7 +162,7 @@ local global = com.makeMergeable({
   //       lokiAlerts: true,
   //       lokiRules: true,
   //     },
-  //   },
+    // },
 });
 
 // loki Config
@@ -188,6 +187,14 @@ local loki = com.makeMergeable({
         ruler: '%s-ruler' % inv.parameters._instance,
         admin: '%s-loki-admin' % inv.parameters._instance,
       },
+          s3: {
+            endpoint: s3endpoint,
+            [if params.s3.region != null then 'region']: params.s3.region,
+            [if params.s3.insecure then 'insecure']: true,
+            secretAccessKey: '${S3_ACCESS_KEY_ID}',
+            accessKeyId: '${S3_SECRET_ACCESS_KEY}',
+            s3ForcePathStyle: true,
+          }
     },
     ingester: {
       chunk_encoding: 'snappy',
@@ -200,39 +207,6 @@ local loki = com.makeMergeable({
       max_concurrent: 4,
     },
     //     structuredConfig: {
-    //       alertmanager_storage: {
-    //         backend: 's3',
-    //         s3: {
-    //           bucket_name: '%s-alertmanager-bucket' % params.s3.bucketPrefix,
-    //           endpoint: s3endpoint,
-    //           [if params.s3.region != null then 'region']: params.s3.region,
-    //           [if params.s3.insecure then 'insecure']: true,
-    //           access_key_id: '${S3_ACCESS_KEY_ID}',
-    //           secret_access_key: '${S3_SECRET_ACCESS_KEY}',
-    //         },
-    //       },
-    //       blocks_storage: {
-    //         backend: 's3',
-    //         s3: {
-    //           bucket_name: '%s-blocks-bucket' % params.s3.bucketPrefix,
-    //           endpoint: s3endpoint,
-    //           [if params.s3.region != null then 'region']: params.s3.region,
-    //           [if params.s3.insecure then 'insecure']: true,
-    //           access_key_id: '${S3_ACCESS_KEY_ID}',
-    //           secret_access_key: '${S3_SECRET_ACCESS_KEY}',
-    //         },
-    //       },
-    //       ruler_storage: {
-    //         backend: 's3',
-    //         s3: {
-    //           bucket_name: '%s-ruler-bucket' % params.s3.bucketPrefix,
-    //           endpoint: s3endpoint,
-    //           [if params.s3.region != null then 'region']: params.s3.region,
-    //           [if params.s3.insecure then 'insecure']: true,
-    //           access_key_id: '${S3_ACCESS_KEY_ID}',
-    //           secret_access_key: '${S3_SECRET_ACCESS_KEY}',
-    //         },
-    //       },
     //       [if params.config.tenantFederation then 'tenant_federation']: {
     //         enabled: params.config.tenantFederation,
     //       },
@@ -327,7 +301,7 @@ local hardNope = com.makeMergeable({
 });
 
 {
-  ['%s-components' % inv.parameters._instance]: components + caches,
+  ['%s-components' % inv.parameters._instance]: components + caches + experimental,
   ['%s-configs' % inv.parameters._instance]: openshift + images + global + loki + ingress,
   ['%s-overrides' % inv.parameters._instance]: params.helm_values + hardNope,
 }
