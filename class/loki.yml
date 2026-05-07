@@ -38,15 +38,15 @@ parameters:
           namespace: ${loki:namespace:name}
           api_versions: monitoring.coreos.com/v1/ServiceMonitor,monitoring.coreos.com/v1/PrometheusRule
 
-  # commodore:
-  #   postprocess:
-  #     filters:
-  #       - type: jsonnet
-  #         filter: postprocess/remove-null-objs.jsonnet
-  #         path: ${_instance}/10_helm_loki/loki/templates/monitoring
-  #       - type: jsonnet
-  #         filter: postprocess/patch-alerts.jsonnet
-  #         path: ${_instance}/10_helm_loki/loki/templates/monitoring
-  #       - type: jsonnet
-  #         filter: postprocess/patch-crb.jsonnet
-  #         path: ${_instance}/10_helm_loki/loki/templates/backend
+  commodore:
+    postprocess:
+      filters:
+        # - type: jsonnet
+        #   filter: postprocess/remove-null-objs.jsonnet
+        #   path: ${_instance}/10_loki/loki/templates/monitoring
+        # - type: jsonnet
+        #   filter: postprocess/patch-alerts.jsonnet
+        #   path: ${_instance}/10_loki/loki/templates/monitoring
+        - type: jsonnet
+          filter: postprocess/patch-crb.jsonnet
+          path: ${_instance}/10_loki/loki/templates/backend

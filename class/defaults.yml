@@ -38,8 +38,6 @@ parameters:
         enabled: true
       queryScheduler:
         enabled: true
-      # storeGateway:
-      #   enabled: true
       # Write Path
       distributor:
         enabled: true
@@ -96,11 +94,6 @@ parameters:
         secretVersion: 0
 
     secrets: {}
-      # loki-bucket-secret:
-      #   stringData:
-      #     S3_ACCESS_KEY_ID: null
-      #     S3_SECRET_ACCESS_KEY: null
-      #     S3_ENDPOINT: null
 
     alerts:
       additionalRules: {}

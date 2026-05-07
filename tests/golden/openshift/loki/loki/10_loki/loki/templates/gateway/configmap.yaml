@@ -204,14 +204,14 @@ data:
     t$upstream_addr\\t$upstream_connect_time\\t$upstream_header_time\\t$upstream_response_time\\\
     t$request_uri';\n  access_log syslog:server=127.0.0.1:8514,nohostname access_log_exporter\
     \ if=$track;\n  access_log   /dev/stderr  main;\n\n  sendfile     on;\n  tcp_nopush\
-    \   on;\n  resolver kube-dns.kube-system.svc.cluster.local.;\n\n  # if the X-Query-Tags\
-    \ header is empty, set a noop= without a value as empty values are not logged\n\
-    \  map $http_x_query_tags $query_tags {\n    \"\"        \"noop=\";          \
-    \  # When header is empty, set noop=\n    default   $http_x_query_tags; # Otherwise,\
-    \ preserve the original value\n  }\n\n  server {\n    listen             8080;\n\
-    \    listen             [::]:8080;\n\n    location = / {\n      \n      return\
-    \ 200 'OK';\n      auth_basic off;\n    }\n\n    location = /stub_status {\n \
-    \     stub_status on;\n      satisfy any;\n      access_log off;\n      allow\
+    \   on;\n  resolver dns-default.openshift-dns.svc.cluster.local.;\n\n  # if the\
+    \ X-Query-Tags header is empty, set a noop= without a value as empty values are\
+    \ not logged\n  map $http_x_query_tags $query_tags {\n    \"\"        \"noop=\"\
+    ;            # When header is empty, set noop=\n    default   $http_x_query_tags;\
+    \ # Otherwise, preserve the original value\n  }\n\n  server {\n    listen    \
+    \         8080;\n    listen             [::]:8080;\n\n    location = / {\n   \
+    \   \n      return 200 'OK';\n      auth_basic off;\n    }\n\n    location = /stub_status\
+    \ {\n      stub_status on;\n      satisfy any;\n      access_log off;\n      allow\
     \ 127.0.0.1;\n      deny all;\n      server_tokens on;  # expose nginx version\n\
     \    }\n\n    ########################################################\n    #\
     \ Configure backend targets\n    location ^~ /ui {\n      \n      set $backend\

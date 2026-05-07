@@ -7,3 +7,10 @@ parameters:
       - type: https
         source: https://raw.githubusercontent.com/appuio/component-openshift4-monitoring/master/lib/openshift4-monitoring-prom.libsonnet
         output_path: vendor/lib/prom.libsonnet
+
+  facts:
+    distribution: openshift4
+
+  openshift:
+    appsDomain: apps.example.com
+    baseDomain: example.com

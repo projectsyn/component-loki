@@ -22,7 +22,7 @@ spec:
   template:
     metadata:
       annotations:
-        checksum/config: d983d4b135c64732f88dea989ad8aa77d312f04b272722a7fea4a9f3368128c2
+        checksum/config: 22ab3460ef1cfdc14731de230eb023951e6741035f676e08a49a51c36ca46f38
       labels:
         app.kubernetes.io/component: gateway
         app.kubernetes.io/instance: loki
@@ -119,13 +119,7 @@ spec:
               name: config
               subPath: access-log-exporter.yaml
       enableServiceLinks: true
-      securityContext:
-        fsGroup: 101
-        runAsGroup: 101
-        runAsNonRoot: true
-        runAsUser: 101
-        seccompProfile:
-          type: RuntimeDefault
+      securityContext: null
       serviceAccountName: loki-gateway
       terminationGracePeriodSeconds: 30
       volumes:

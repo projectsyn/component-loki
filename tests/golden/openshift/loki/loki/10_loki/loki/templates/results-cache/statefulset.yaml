@@ -118,13 +118,7 @@ spec:
               type: RuntimeDefault
       initContainers: []
       nodeSelector: {}
-      securityContext:
-        fsGroup: 11211
-        runAsGroup: 11211
-        runAsNonRoot: true
-        runAsUser: 11211
-        seccompProfile:
-          type: RuntimeDefault
+      securityContext: null
       serviceAccountName: loki-memcached
       terminationGracePeriodSeconds: 60
       tolerations: []

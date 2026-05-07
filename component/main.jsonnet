@@ -50,7 +50,7 @@ local secrets = com.generateResources(
   },
   '01_secrets': secrets,
   // Empty file to make sure the directory is created. Later used in patching alerts.
-  '10_helm_loki/loki/templates/monitoring/.keep': {},
+  '10_loki/loki/templates/monitoring/.keep': {},
 
   '20_prometheus_rule': prom.generateRules('loki-custom', { 'loki-custom.rules': params.alerts.additionalRules }) {
     metadata+: {
