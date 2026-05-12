@@ -46,7 +46,6 @@ spec:
             - -config.file=/etc/loki/config/config.yaml
             - -config.expand-env=true
             - -target=index-gateway
-            - -config.expand-env=true
           env:
             - name: GOMEMLIMIT
               value: 1827MiB

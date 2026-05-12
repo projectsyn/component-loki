@@ -49,7 +49,6 @@ spec:
             - -config.expand-env=true
             - -target=ingester
             - -ingester.availability-zone=zone-default
-            - -config.expand-env=true
           env:
             - name: GOMEMLIMIT
               value: 13926MiB

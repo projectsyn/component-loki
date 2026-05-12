@@ -50,7 +50,6 @@ spec:
             - -config.file=/etc/loki/config/config.yaml
             - -config.expand-env=true
             - -target=querier
-            - -config.expand-env=true
           env:
             - name: GOMEMLIMIT
               value: 3481MiB

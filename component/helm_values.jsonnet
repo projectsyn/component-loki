@@ -104,7 +104,15 @@ local openshift = if isOpenshift then com.makeMergeable({
       podSecurityContext: null,
     },
     gateway: {
-        podSecurityContext: null,
+      podSecurityContext: null,
+      metrics: {
+        containerSecurityContext: {
+            privileged: null,
+            runAsGroup: null,
+            runAsNonRoot: null,
+            runAsUser: null,
+        },
+      },
     //   podSecurityContext: {
     //     fsGroup: null,
     //     runAsGroup: null,
@@ -152,13 +160,12 @@ local images = com.makeMergeable({
 });
 
 local global = com.makeMergeable({
-    global: {
-      extraEnvFrom: [ { secretRef: { name: '%s-bucket-secret' % inv.parameters._instance } } ],
-      extraArgs: [ '-config.expand-env=true' ],
-      podAnnotations: {
-        bucketSecretVersion: '%s' % params.s3.auth.secretVersion,
-      },
+  global: {
+    extraEnvFrom: [ { secretRef: { name: '%s-bucket-secret' % inv.parameters._instance } } ],
+    podAnnotations: {
+      bucketSecretVersion: '%s' % params.s3.auth.secretVersion,
     },
+  },
   //   [if params.monitoring then 'metaMonitoring']: {
   //     serviceMonitor: {
   //       enabled: params.monitoring,
@@ -169,6 +176,12 @@ local global = com.makeMergeable({
   //       lokiRules: true,
   //     },
     // },
+  lokiCanary: {
+    enabled: false,
+  },
+  test: {
+    enabled: false,
+  },
 });
 
 // loki Config
@@ -189,9 +202,9 @@ local loki = com.makeMergeable({
     storage: {
       type: 's3',
       bucketNames: {
-        chunks: '%s-chunks' % inv.parameters._instance,
-        ruler: '%s-ruler' % inv.parameters._instance,
-        admin: '%s-loki-admin' % inv.parameters._instance,
+        chunks: '%s-chunks' % params.s3.bucketPrefix,
+        ruler: '%s-ruler' % params.s3.bucketPrefix,
+        admin: '%s-loki-admin' % params.s3.bucketPrefix,
       },
           s3: {
             endpoint: s3endpoint,
