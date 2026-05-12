@@ -1,3 +1,28 @@
-# Overwrite parameters here
+parameters:
+  kapitan:
+    dependencies:
+      - type: https
+        source: https://raw.githubusercontent.com/appuio/component-openshift4-monitoring/v5.5.1/lib/openshift4-monitoring-alert-patching.libsonnet
+        output_path: vendor/lib/alert-patching.libsonnet
+      - type: https
+        source: https://raw.githubusercontent.com/appuio/component-openshift4-monitoring/v5.5.1/lib/openshift4-monitoring-prom.libsonnet
+        output_path: vendor/lib/prom.libsonnet
 
-# parameters: {...}
+  facts:
+    cloud: exoscale
+    region: ch-dk-2
+
+  loki:
+    images:
+      loki:
+        registry: dockerhub.vshn.net
+      memcached:
+        registry: dockerhub.vshn.net
+      memcachedExporter:
+        registry: dockerhub.vshn.net
+      nginx:
+        registry: dockerhub.vshn.net
+
+    components:
+      ruler:
+        enabled: true
