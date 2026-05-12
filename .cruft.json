@@ -1,6 +1,6 @@
 {
   "template": "https://github.com/projectsyn/commodore-component-template.git",
-  "commit": "c206dcdfb5acbbeb16560e770bcdf6564025256f",
+  "commit": "5ae57721558399419f867334e31d23a7f7a892ba",
   "checkout": "main",
   "context": {
     "cookiecutter": {
@@ -25,7 +25,7 @@
       "github_name": "component-loki",
       "github_url": "https://github.com/projectsyn/component-loki",
       "_template": "https://github.com/projectsyn/commodore-component-template.git",
-      "_commit": "c206dcdfb5acbbeb16560e770bcdf6564025256f"
+      "_commit": "5ae57721558399419f867334e31d23a7f7a892ba"
     }
   },
   "directory": null
