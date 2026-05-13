@@ -7,16 +7,6 @@ local params = inv.parameters.loki;
 local isOpenshift = std.member([ 'openshift4', 'oke' ], inv.parameters.facts.distribution);
 local hasRolloutOperator = std.member(inv.applications, 'rollout-operator');
 
-local s3endpoint =
-  if params.s3.endpoint != null then
-    params.s3.endpoint
-  else if std.get(inv.parameters.facts, 'cloud') == 'cloudscale' then
-    'objects.%s.cloudscale.ch' % std.stripChars(std.get(inv.parameters.facts, 'region', 'lpg'), '0123456789')
-  else if std.get(inv.parameters.facts, 'cloud') == 'exoscale' then
-    'sos-%s.exo.io' % std.get(inv.parameters.facts, 'region', 'ch-gva-2')
-  else
-    '${S3_ENDPOINT}';
-
 // Global Params and Zone Aware Replication
 local globalConfig = params.global + com.makeMergeable({
   nodeSelector: std.get(params, 'globalNodeSelector', params.global.nodeSelector),
@@ -169,12 +159,12 @@ local loki = com.makeMergeable({
         admin: '%s-loki-admin' % params.s3.bucketPrefix,
       },
       s3: {
-        endpoint: s3endpoint,
+        endpoint: params.s3.endpoint,
         [if params.s3.region != null then 'region']: params.s3.region,
         [if params.s3.insecure then 'insecure']: true,
         accessKeyId: '${S3_ACCESS_KEY_ID}',
         secretAccessKey: '${S3_SECRET_ACCESS_KEY}',
-        s3ForcePathStyle: true,
+        s3ForcePathStyle: params.s3.forcePathStyle,
       },
     },
     ingester: {

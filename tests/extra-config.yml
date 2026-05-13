@@ -26,3 +26,7 @@ parameters:
     components:
       ruler:
         enabled: true
+
+    s3:
+      endpoint: 's3.example.com'
+      region: 'us-east-1'

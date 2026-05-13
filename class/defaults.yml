@@ -84,8 +84,9 @@ parameters:
 
     s3:
       bucketPrefix: ${_instance}
-      endpoint: null
+      endpoint: ''
       region: null
+      forcePathStyle: true
       insecure: false
       auth:
         accessKeyId: '?{vaultkv:${cluster:tenant}/${cluster:name}/${_instance}/s3_access_key}'

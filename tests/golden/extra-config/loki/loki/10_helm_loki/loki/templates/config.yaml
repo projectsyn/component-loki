@@ -34,8 +34,9 @@ data:
         s3:
           access_key_id: ${S3_ACCESS_KEY_ID}
           bucketnames: loki-chunks
-          endpoint: sos-ch-dk-2.exo.io
+          endpoint: s3.example.com
           insecure: false
+          region: us-east-1
           s3forcepathstyle: true
           secret_access_key: ${S3_SECRET_ACCESS_KEY}
     frontend:
@@ -82,8 +83,9 @@ data:
         s3:
           access_key_id: ${S3_ACCESS_KEY_ID}
           bucketnames: loki-ruler
-          endpoint: sos-ch-dk-2.exo.io
+          endpoint: s3.example.com
           insecure: false
+          region: us-east-1
           s3forcepathstyle: true
           secret_access_key: ${S3_SECRET_ACCESS_KEY}
         type: s3

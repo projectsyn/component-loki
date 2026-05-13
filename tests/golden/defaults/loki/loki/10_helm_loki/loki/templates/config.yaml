@@ -34,7 +34,6 @@ data:
         s3:
           access_key_id: ${S3_ACCESS_KEY_ID}
           bucketnames: loki-chunks
-          endpoint: objects.rma.cloudscale.ch
           insecure: false
           s3forcepathstyle: true
           secret_access_key: ${S3_SECRET_ACCESS_KEY}
@@ -82,7 +81,6 @@ data:
         s3:
           access_key_id: ${S3_ACCESS_KEY_ID}
           bucketnames: loki-ruler
-          endpoint: objects.rma.cloudscale.ch
           insecure: false
           s3forcepathstyle: true
           secret_access_key: ${S3_SECRET_ACCESS_KEY}

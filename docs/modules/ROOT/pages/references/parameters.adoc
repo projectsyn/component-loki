@@ -489,20 +489,29 @@ Set the prefix for the buckets used to store logs.
 
 [horizontal]
 type:: string
-default:: `null`
+default:: ``
+example::
++
+[source,yaml]
+----
+s3:
+  endpoint: 'objects.rma.cloudscale.ch'
+----
 
 Conigure the endpoint for the S3 storage.
-
-[TIP]
-====
-For Cloudscale and Exoscale the endpoint will be calculated from cluster facts.
-====
 
 === `s3.region`
 
 [horizontal]
 type:: string
 default:: `null`
+example::
++
+[source,yaml]
+----
+s3:
+  region: 'us-east-1'
+----
 
 Conigure the region for the S3 storage.
 
@@ -510,6 +519,14 @@ Conigure the region for the S3 storage.
 ====
 For Cloudscale and Exoscale the region will be calculated from cluster facts.
 ====
+
+=== `s3.forcePathStyle`
+
+[horizontal]
+type:: boolean
+default:: true
+
+Force path-style S3 URLs for the endpoint.
 
 === `s3.insecure`
 
