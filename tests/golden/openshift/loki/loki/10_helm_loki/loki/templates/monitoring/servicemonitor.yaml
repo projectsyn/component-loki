@@ -4,8 +4,8 @@ metadata:
   labels:
     app.kubernetes.io/instance: loki
     app.kubernetes.io/name: loki
-    app.kubernetes.io/version: 3.6.5
-    helm.sh/chart: loki-6.53.0
+    app.kubernetes.io/version: 3.7.1
+    helm.sh/chart: loki-13.5.0
   name: loki
   namespace: syn-loki
 spec:

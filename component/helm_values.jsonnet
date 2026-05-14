@@ -90,9 +90,11 @@ local openshift = if isOpenshift then com.makeMergeable({
 }) else {};
 
 local images = com.makeMergeable({
-  image: {
-    repository: '%(registry)s/%(repository)s' % params.images.loki,
-    [if std.objectHas(params.images.loki, 'tag') then 'tag']: params.images.loki.tag,
+  loki: {
+    image: {
+      repository: '%(registry)s/%(repository)s' % params.images.loki,
+      [if std.objectHas(params.images.loki, 'tag') then 'tag']: params.images.loki.tag,
+    },
   },
   memcached: {
     image: {
@@ -114,13 +116,19 @@ local images = com.makeMergeable({
         [if std.objectHas(params.images.nginx, 'tag') then 'tag']: params.images.nginx.tag,
       },
     },
+    metrics: {
+      image: {
+        registry: params.images.accessLogExporter.registry,
+        repository: params.images.accessLogExporter.repository,
+        [if std.objectHas(params.images.accessLogExporter, 'tag') then 'tag']: params.images.accessLogExporter.tag,
+      },
+    },
   },
 });
 
 local global = com.makeMergeable({
   global: {
     extraEnvFrom: [ { secretRef: { name: '%s-bucket-secret' % inv.parameters._instance } } ],
-    extraArgs: [ '-config.expand-env=true' ],
     podAnnotations: {
       bucketSecretVersion: '%s' % params.s3.auth.secretVersion,
     },

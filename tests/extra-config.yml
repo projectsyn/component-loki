@@ -22,6 +22,8 @@ parameters:
         registry: dockerhub.vshn.net
       nginx:
         registry: dockerhub.vshn.net
+      accessLogExporter:
+        tag: latest
 
     components:
       ruler:
