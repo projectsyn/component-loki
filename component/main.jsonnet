@@ -9,10 +9,22 @@ local prom = import 'lib/prom.libsonnet';
 // The hiera parameters for the component
 local params = inv.parameters.loki;
 
+
 local secrets = com.generateResources(
-  params.secrets,
+  {
+    ['%s-bucket-secret' % inv.parameters._instance]: {
+      stringData: {
+        S3_ACCESS_KEY_ID: params.s3.auth.accessKeyId,
+        S3_SECRET_ACCESS_KEY: params.s3.auth.secretAccessKey,
+      },
+    },
+  } + com.makeMergeable(params.secrets),
   function(name) kube.Secret(name) {
     metadata+: {
+      labels+: {
+        'app.kubernetes.io/managed-by': 'commodore',
+        'app.kubernetes.io/name': name,
+      },
       namespace: params.namespace.name,
     },
   }
