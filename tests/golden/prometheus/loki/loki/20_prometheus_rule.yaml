@@ -1,0 +1,20 @@
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  annotations: {}
+  labels:
+    monitoring.syn.tools/enabled: 'true'
+    name: loki-custom
+  name: loki-custom
+  namespace: syn-loki
+spec:
+  groups:
+    - name: loki-custom.rules
+      rules:
+        - alert: LokiTestAlert
+          annotations:
+            summary: Test alert
+          expr: vector(1) == 0
+          for: 5m
+          labels:
+            severity: warning
