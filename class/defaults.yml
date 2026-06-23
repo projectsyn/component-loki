@@ -13,7 +13,7 @@ parameters:
     charts:
       loki:
         source: https://grafana-community.github.io/helm-charts
-        version: v13.5.0
+        version: v13.7.2
 
     images:
       loki:

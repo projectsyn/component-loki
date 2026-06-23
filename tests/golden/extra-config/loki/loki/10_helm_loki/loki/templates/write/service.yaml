@@ -6,8 +6,8 @@ metadata:
     app.kubernetes.io/component: write
     app.kubernetes.io/instance: loki
     app.kubernetes.io/name: loki
-    app.kubernetes.io/version: 3.7.1
-    helm.sh/chart: loki-13.5.0
+    app.kubernetes.io/version: 3.7.2
+    helm.sh/chart: loki-13.7.2
   name: loki-write
   namespace: syn-loki
 spec:
@@ -39,8 +39,8 @@ metadata:
     app.kubernetes.io/component: write
     app.kubernetes.io/instance: loki
     app.kubernetes.io/name: loki
-    app.kubernetes.io/version: 3.7.1
-    helm.sh/chart: loki-13.5.0
+    app.kubernetes.io/version: 3.7.2
+    helm.sh/chart: loki-13.7.2
     prometheus.io/service-monitor: 'false'
     variant: headless
   name: loki-write-headless
