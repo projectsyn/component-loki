@@ -12,8 +12,8 @@ parameters:
 
     charts:
       loki:
-        source: https://grafana.github.io/helm-charts
-        version: v6.53.0
+        source: https://grafana-community.github.io/helm-charts
+        version: v13.7.2
 
     images:
       loki:
@@ -28,6 +28,9 @@ parameters:
       nginx:
         registry: docker.io
         repository: nginxinc/nginx-unprivileged
+      accessLogExporter:
+        registry: ghcr.io
+        repository: jkroepke/access-log-exporter
 
     preset: legacy
 
