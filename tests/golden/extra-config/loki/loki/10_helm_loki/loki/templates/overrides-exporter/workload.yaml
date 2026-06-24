@@ -1,34 +1,29 @@
 apiVersion: apps/v1
-kind: StatefulSet
+kind: Deployment
 metadata:
   labels:
-    app.kubernetes.io/component: backend
+    app.kubernetes.io/component: overrides-exporter
     app.kubernetes.io/instance: loki
     app.kubernetes.io/name: loki
     app.kubernetes.io/version: 3.7.2
     helm.sh/chart: loki-17.4.11
-  name: loki-backend
+  name: loki-overrides-exporter
   namespace: syn-loki
 spec:
-  persistentVolumeClaimRetentionPolicy:
-    whenDeleted: Delete
-    whenScaled: Delete
-  podManagementPolicy: Parallel
-  replicas: 3
+  replicas: 1
   revisionHistoryLimit: 10
   selector:
     matchLabels:
-      app.kubernetes.io/component: backend
+      app.kubernetes.io/component: overrides-exporter
       app.kubernetes.io/instance: loki
       app.kubernetes.io/name: loki
-  serviceName: loki-backend-headless
   template:
     metadata:
       annotations:
-        checksum/config: 024a6bdf8e5f9fcb1b738320856091cf13e30a5fd575d46b637df747723e7f78
-        kubectl.kubernetes.io/default-container: backend
+        checksum/config: ef7e4e1428196d5f360adf616f57243174b2d1a6cf5180603f91bc7ba17deaeb
+        kubectl.kubernetes.io/default-container: overrides-exporter
       labels:
-        app.kubernetes.io/component: backend
+        app.kubernetes.io/component: overrides-exporter
         app.kubernetes.io/instance: loki
         app.kubernetes.io/name: loki
         app.kubernetes.io/part-of: memberlist
@@ -40,7 +35,7 @@ spec:
           requiredDuringSchedulingIgnoredDuringExecution:
             - labelSelector:
                 matchLabels:
-                  app.kubernetes.io/component: backend
+                  app.kubernetes.io/component: overrides-exporter
                   app.kubernetes.io/instance: loki
                   app.kubernetes.io/name: loki
               topologyKey: kubernetes.io/hostname
@@ -50,11 +45,10 @@ spec:
             - -config.file=/etc/loki/config/config.yaml
             - -config.expand-env=true
             - -memberlist.advertise-addr=$(POD_IP)
-            - -target=backend
-            - -legacy-read-mode=false
+            - -target=overrides-exporter
           env:
             - name: GOMEMLIMIT
-              value: 1740MiB
+              value: 108MiB
             - name: GOGC
               value: '80'
             - name: POD_IP
@@ -74,7 +68,7 @@ spec:
             periodSeconds: 30
             successThreshold: 1
             timeoutSeconds: 1
-          name: backend
+          name: overrides-exporter
           ports:
             - containerPort: 3100
               name: http-metrics
@@ -96,11 +90,10 @@ spec:
             timeoutSeconds: 1
           resources:
             limits:
-              cpu: 2
-              memory: 2Gi
+              memory: 128Mi
             requests:
-              cpu: 0.5
-              memory: 1Gi
+              cpu: 100m
+              memory: 128Mi
           securityContext:
             allowPrivilegeEscalation: false
             capabilities:
@@ -118,67 +111,15 @@ spec:
               name: data
             - mountPath: /tmp
               name: temp
-            - mountPath: /rules
-              name: sc-rules-volume
-        - env:
-            - name: METHOD
-              value: WATCH
-            - name: LABEL
-              value: loki_rule
-            - name: FOLDER
-              value: /rules
-            - name: RESOURCE
-              value: both
-            - name: WATCH_SERVER_TIMEOUT
-              value: '60'
-            - name: WATCH_CLIENT_TIMEOUT
-              value: '60'
-            - name: LOG_LEVEL
-              value: INFO
-            - name: HEALTH_PORT
-              value: '8080'
-          image: docker.io/kiwigrid/k8s-sidecar:2.7.4
-          imagePullPolicy: IfNotPresent
-          livenessProbe:
-            failureThreshold: 3
-            httpGet:
-              path: /healthz
-              port: http-sidecar
-            initialDelaySeconds: 30
-            periodSeconds: 30
-            successThreshold: 1
-            timeoutSeconds: 1
-          name: loki-sc-rules
-          ports:
-            - containerPort: 8080
-              name: http-sidecar
-              protocol: TCP
-          readinessProbe:
-            failureThreshold: 3
-            httpGet:
-              path: /healthz
-              port: http-sidecar
-            initialDelaySeconds: 3
-            periodSeconds: 10
-            successThreshold: 1
-            timeoutSeconds: 1
-          securityContext:
-            allowPrivilegeEscalation: false
-            capabilities:
-              drop:
-                - ALL
-            readOnlyRootFilesystem: true
-            seccompProfile:
-              type: RuntimeDefault
-          volumeMounts:
-            - mountPath: /tmp
-              name: sc-rules-temp
-            - mountPath: /rules
-              name: sc-rules-volume
       enableServiceLinks: true
+      nodeSelector:
+        appuio.io/node-class: plus
       securityContext:
+        fsGroup: 10001
         fsGroupChangePolicy: OnRootMismatch
+        runAsGroup: 10001
         runAsNonRoot: true
+        runAsUser: 10001
         seccompProfile:
           type: RuntimeDefault
       serviceAccountName: loki
@@ -196,20 +137,4 @@ spec:
             name: loki-runtime
           name: runtime-config
         - emptyDir: {}
-          name: sc-rules-volume
-        - emptyDir: {}
-          name: sc-rules-temp
-  updateStrategy:
-    rollingUpdate:
-      partition: 0
-  volumeClaimTemplates:
-    - apiVersion: v1
-      kind: PersistentVolumeClaim
-      metadata:
-        name: data
-      spec:
-        accessModes:
-          - ReadWriteOnce
-        resources:
-          requests:
-            storage: 10Gi
+          name: data

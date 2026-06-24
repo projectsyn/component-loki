@@ -3,12 +3,12 @@ kind: Service
 metadata:
   annotations: null
   labels:
-    app.kubernetes.io/component: read
+    app.kubernetes.io/component: distributor
     app.kubernetes.io/instance: loki
     app.kubernetes.io/name: loki
     app.kubernetes.io/version: 3.7.2
     helm.sh/chart: loki-17.4.11
-  name: loki-read
+  name: loki-distributor
   namespace: syn-loki
 spec:
   ports:
@@ -26,7 +26,7 @@ spec:
       targetPort: grpc
   publishNotReadyAddresses: true
   selector:
-    app.kubernetes.io/component: read
+    app.kubernetes.io/component: distributor
     app.kubernetes.io/instance: loki
     app.kubernetes.io/name: loki
   type: ClusterIP
@@ -36,14 +36,14 @@ kind: Service
 metadata:
   annotations: null
   labels:
-    app.kubernetes.io/component: read
+    app.kubernetes.io/component: distributor
     app.kubernetes.io/instance: loki
     app.kubernetes.io/name: loki
     app.kubernetes.io/version: 3.7.2
     helm.sh/chart: loki-17.4.11
     prometheus.io/service-monitor: 'false'
     variant: headless
-  name: loki-read-headless
+  name: loki-distributor-headless
   namespace: syn-loki
 spec:
   clusterIP: None
@@ -62,7 +62,7 @@ spec:
       targetPort: grpc
   publishNotReadyAddresses: true
   selector:
-    app.kubernetes.io/component: read
+    app.kubernetes.io/component: distributor
     app.kubernetes.io/instance: loki
     app.kubernetes.io/name: loki
   type: ClusterIP

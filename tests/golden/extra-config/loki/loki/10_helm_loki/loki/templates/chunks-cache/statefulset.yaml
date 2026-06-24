@@ -13,7 +13,7 @@ metadata:
   namespace: syn-loki
 spec:
   podManagementPolicy: Parallel
-  replicas: 1
+  replicas: 2
   selector:
     matchLabels:
       app.kubernetes.io/component: memcached-chunks-cache
@@ -66,10 +66,10 @@ spec:
             timeoutSeconds: 3
           resources:
             limits:
-              memory: 9830Mi
+              memory: 4Gi
             requests:
               cpu: 500m
-              memory: 9830Mi
+              memory: 4Gi
           securityContext:
             allowPrivilegeEscalation: false
             capabilities:
@@ -117,7 +117,8 @@ spec:
             seccompProfile:
               type: RuntimeDefault
       initContainers: []
-      nodeSelector: {}
+      nodeSelector:
+        appuio.io/node-class: plus
       securityContext:
         fsGroup: 11211
         runAsGroup: 11211

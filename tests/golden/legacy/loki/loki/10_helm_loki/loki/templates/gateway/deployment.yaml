@@ -116,6 +116,8 @@ spec:
               name: config
               subPath: access-log-exporter.yaml
       enableServiceLinks: true
+      nodeSelector:
+        appuio.io/node-class: plus
       securityContext:
         fsGroup: 101
         runAsGroup: 101

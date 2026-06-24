@@ -1,31 +1,33 @@
 apiVersion: apps/v1
-kind: StatefulSet
+kind: Deployment
 metadata:
   labels:
-    app.kubernetes.io/component: write
+    app.kubernetes.io/component: distributor
     app.kubernetes.io/instance: loki
     app.kubernetes.io/name: loki
     app.kubernetes.io/version: 3.7.2
     helm.sh/chart: loki-17.4.11
-  name: loki-write
+  name: loki-distributor
   namespace: syn-loki
 spec:
-  podManagementPolicy: Parallel
   replicas: 3
   revisionHistoryLimit: 10
   selector:
     matchLabels:
-      app.kubernetes.io/component: write
+      app.kubernetes.io/component: distributor
       app.kubernetes.io/instance: loki
       app.kubernetes.io/name: loki
-  serviceName: loki-write-headless
+  strategy:
+    rollingUpdate:
+      maxSurge: 0
+      maxUnavailable: 1
   template:
     metadata:
       annotations:
-        checksum/config: 024a6bdf8e5f9fcb1b738320856091cf13e30a5fd575d46b637df747723e7f78
-        kubectl.kubernetes.io/default-container: write
+        checksum/config: ef7e4e1428196d5f360adf616f57243174b2d1a6cf5180603f91bc7ba17deaeb
+        kubectl.kubernetes.io/default-container: distributor
       labels:
-        app.kubernetes.io/component: write
+        app.kubernetes.io/component: distributor
         app.kubernetes.io/instance: loki
         app.kubernetes.io/name: loki
         app.kubernetes.io/part-of: memberlist
@@ -37,7 +39,7 @@ spec:
           requiredDuringSchedulingIgnoredDuringExecution:
             - labelSelector:
                 matchLabels:
-                  app.kubernetes.io/component: write
+                  app.kubernetes.io/component: distributor
                   app.kubernetes.io/instance: loki
                   app.kubernetes.io/name: loki
               topologyKey: kubernetes.io/hostname
@@ -47,10 +49,11 @@ spec:
             - -config.file=/etc/loki/config/config.yaml
             - -config.expand-env=true
             - -memberlist.advertise-addr=$(POD_IP)
-            - -target=write
+            - -target=distributor
+            - -distributor.zone-awareness-enabled=true
           env:
             - name: GOMEMLIMIT
-              value: 6963MiB
+              value: 3481MiB
             - name: GOGC
               value: '80'
             - name: POD_IP
@@ -70,7 +73,7 @@ spec:
             periodSeconds: 30
             successThreshold: 1
             timeoutSeconds: 1
-          name: write
+          name: distributor
           ports:
             - containerPort: 3100
               name: http-metrics
@@ -92,11 +95,10 @@ spec:
             timeoutSeconds: 1
           resources:
             limits:
-              cpu: 3
-              memory: 8Gi
-            requests:
-              cpu: 1
               memory: 4Gi
+            requests:
+              cpu: 500m
+              memory: 2Gi
           securityContext:
             allowPrivilegeEscalation: false
             capabilities:
@@ -115,13 +117,18 @@ spec:
             - mountPath: /tmp
               name: temp
       enableServiceLinks: true
+      nodeSelector:
+        appuio.io/node-class: plus
       securityContext:
+        fsGroup: 10001
         fsGroupChangePolicy: OnRootMismatch
+        runAsGroup: 10001
         runAsNonRoot: true
+        runAsUser: 10001
         seccompProfile:
           type: RuntimeDefault
       serviceAccountName: loki
-      terminationGracePeriodSeconds: 300
+      terminationGracePeriodSeconds: 30
       volumes:
         - emptyDir: {}
           name: temp
@@ -134,17 +141,5 @@ spec:
         - configMap:
             name: loki-runtime
           name: runtime-config
-  updateStrategy:
-    rollingUpdate:
-      partition: 0
-  volumeClaimTemplates:
-    - apiVersion: v1
-      kind: PersistentVolumeClaim
-      metadata:
-        name: data
-      spec:
-        accessModes:
-          - ReadWriteOnce
-        resources:
-          requests:
-            storage: 10Gi
+        - emptyDir: {}
+          name: data

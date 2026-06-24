@@ -1,33 +1,30 @@
 apiVersion: apps/v1
-kind: Deployment
+kind: StatefulSet
 metadata:
   labels:
-    app.kubernetes.io/component: read
+    app.kubernetes.io/component: index-gateway
     app.kubernetes.io/instance: loki
     app.kubernetes.io/name: loki
     app.kubernetes.io/version: 3.7.2
     helm.sh/chart: loki-17.4.11
-  name: loki-read
+  name: loki-index-gateway
   namespace: syn-loki
 spec:
   replicas: 2
   revisionHistoryLimit: 10
   selector:
     matchLabels:
-      app.kubernetes.io/component: read
+      app.kubernetes.io/component: index-gateway
       app.kubernetes.io/instance: loki
       app.kubernetes.io/name: loki
-  strategy:
-    rollingUpdate:
-      maxSurge: 0
-      maxUnavailable: 1
+  serviceName: loki-index-gateway-headless
   template:
     metadata:
       annotations:
-        checksum/config: 024a6bdf8e5f9fcb1b738320856091cf13e30a5fd575d46b637df747723e7f78
-        kubectl.kubernetes.io/default-container: read
+        checksum/config: ef7e4e1428196d5f360adf616f57243174b2d1a6cf5180603f91bc7ba17deaeb
+        kubectl.kubernetes.io/default-container: index-gateway
       labels:
-        app.kubernetes.io/component: read
+        app.kubernetes.io/component: index-gateway
         app.kubernetes.io/instance: loki
         app.kubernetes.io/name: loki
         app.kubernetes.io/part-of: memberlist
@@ -39,7 +36,7 @@ spec:
           requiredDuringSchedulingIgnoredDuringExecution:
             - labelSelector:
                 matchLabels:
-                  app.kubernetes.io/component: read
+                  app.kubernetes.io/component: index-gateway
                   app.kubernetes.io/instance: loki
                   app.kubernetes.io/name: loki
               topologyKey: kubernetes.io/hostname
@@ -49,10 +46,10 @@ spec:
             - -config.file=/etc/loki/config/config.yaml
             - -config.expand-env=true
             - -memberlist.advertise-addr=$(POD_IP)
-            - -target=read
+            - -target=index-gateway
           env:
             - name: GOMEMLIMIT
-              value: 3481MiB
+              value: 1827MiB
             - name: GOGC
               value: '80'
             - name: POD_IP
@@ -72,7 +69,7 @@ spec:
             periodSeconds: 30
             successThreshold: 1
             timeoutSeconds: 1
-          name: read
+          name: index-gateway
           ports:
             - containerPort: 3100
               name: http-metrics
@@ -94,10 +91,10 @@ spec:
             timeoutSeconds: 1
           resources:
             limits:
-              memory: 4Gi
+              memory: 2.1Gi
             requests:
-              cpu: 1
-              memory: 3Gi
+              cpu: 500m
+              memory: 768Mi
           securityContext:
             allowPrivilegeEscalation: false
             capabilities:
@@ -116,13 +113,18 @@ spec:
             - mountPath: /tmp
               name: temp
       enableServiceLinks: true
+      nodeSelector:
+        appuio.io/node-class: plus
       securityContext:
+        fsGroup: 10001
         fsGroupChangePolicy: OnRootMismatch
+        runAsGroup: 10001
         runAsNonRoot: true
+        runAsUser: 10001
         seccompProfile:
           type: RuntimeDefault
       serviceAccountName: loki
-      terminationGracePeriodSeconds: 30
+      terminationGracePeriodSeconds: 300
       volumes:
         - emptyDir: {}
           name: temp
@@ -137,3 +139,5 @@ spec:
           name: runtime-config
         - emptyDir: {}
           name: data
+  updateStrategy:
+    type: RollingUpdate

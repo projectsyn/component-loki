@@ -30,6 +30,7 @@ parameters:
         output_path: ${_instance}/10_helm_loki
         helm_values_files:
           - ${_base_directory}/helmcharts/loki/${loki:charts:loki:version}/${loki:preset}.yaml
+          - ${_base_directory}/helmcharts/loki/${loki:charts:loki:version}/${_instance}-components.yaml
           - ${_base_directory}/helmcharts/loki/${loki:charts:loki:version}/${_instance}-configs.yaml
           - ${_base_directory}/helmcharts/loki/${loki:charts:loki:version}/${_instance}-overrides.yaml
         helm_params:
