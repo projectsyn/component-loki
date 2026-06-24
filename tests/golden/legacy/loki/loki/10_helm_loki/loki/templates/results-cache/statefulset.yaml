@@ -7,7 +7,7 @@ metadata:
     app.kubernetes.io/instance: loki
     app.kubernetes.io/name: loki
     app.kubernetes.io/version: 3.7.2
-    helm.sh/chart: loki-13.7.2
+    helm.sh/chart: loki-17.4.11
     name: memcached-results-cache
   name: loki-results-cache
   namespace: syn-loki
@@ -44,7 +44,7 @@ spec:
           envFrom:
             - secretRef:
                 name: loki-bucket-secret
-          image: docker.io/library/memcached:1.6.41-alpine
+          image: docker.io/library/memcached:1.6.42-alpine
           imagePullPolicy: IfNotPresent
           livenessProbe:
             failureThreshold: 3

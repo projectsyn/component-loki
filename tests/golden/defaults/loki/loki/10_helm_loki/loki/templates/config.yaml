@@ -58,7 +58,6 @@ data:
       volume_enabled: true
     memberlist:
       abort_if_cluster_join_fails: true
-      advertise_addr: ${HASH_RING_INSTANCE_ADDR}
       advertise_port: 7946
       bind_port: 7946
       join_members:
@@ -143,6 +142,6 @@ metadata:
     app.kubernetes.io/instance: loki
     app.kubernetes.io/name: loki
     app.kubernetes.io/version: 3.7.2
-    helm.sh/chart: loki-13.7.2
+    helm.sh/chart: loki-17.4.11
   name: loki
   namespace: syn-loki

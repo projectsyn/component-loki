@@ -6,7 +6,7 @@ metadata:
     app.kubernetes.io/instance: loki
     app.kubernetes.io/name: loki
     app.kubernetes.io/version: 3.7.2
-    helm.sh/chart: loki-13.7.2
+    helm.sh/chart: loki-17.4.11
   name: loki-gateway
   namespace: syn-loki
 spec:
@@ -39,7 +39,7 @@ spec:
               topologyKey: kubernetes.io/hostname
       automountServiceAccountToken: false
       containers:
-        - image: docker.io/nginxinc/nginx-unprivileged:1.30-alpine
+        - image: docker.io/nginxinc/nginx-unprivileged:1.31-alpine
           imagePullPolicy: IfNotPresent
           name: nginx
           ports:
@@ -72,7 +72,7 @@ spec:
             - http://127.0.0.1:8080/stub_status
             - --preset
             - loki
-          image: ghcr.io/jkroepke/access-log-exporter:0.3.12
+          image: ghcr.io/jkroepke/access-log-exporter:0.4.4
           imagePullPolicy: IfNotPresent
           livenessProbe:
             failureThreshold: 3
