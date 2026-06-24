@@ -36,4 +36,23 @@ parameters:
       endpoint: 's3.example.com'
       region: 'us-east-1'
 
+    ingress:
+      enabled: true
+      tls:
+        clusterIssuer: null
+        key: |
+          -----BEGIN PRIVATE KEY-----
+          ...
+          -----END PRIVATE KEY-----
+        cert: |
+          -----BEGIN CERTIFICATE-----
+          ...
+          -----END CERTIFICATE-----
+      url: metrics-receive.example.com
+      labels:
+        custom-label: my-label
+
+    basicAuth:
+      enabled: true
+
     monitoring: false

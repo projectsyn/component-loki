@@ -97,6 +97,19 @@ parameters:
         #increase if auth credentials change
         secretVersion: 0
 
+    ingress:
+      enabled: false
+      tls:
+        enabled: true
+        clusterIssuer: 'letsencrypt-production'
+        key: null
+        cert: null
+      url: ''
+
+    basicAuth:
+      enabled: false
+      htpasswd: '?{vaultkv:${cluster:tenant}/${cluster:name}/${_instance}/htpasswd}'
+
     monitoring: true
     alerts:
       additionalRules: {}
