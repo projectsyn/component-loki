@@ -22,7 +22,7 @@ spec:
   template:
     metadata:
       annotations:
-        checksum/config: 2ac29b210397fb257fb28bb7defc2a7245d4fff101baf745bc1ca1281b373f26
+        checksum/config: d983d4b135c64732f88dea989ad8aa77d312f04b272722a7fea4a9f3368128c2
       labels:
         app.kubernetes.io/component: gateway
         app.kubernetes.io/instance: loki

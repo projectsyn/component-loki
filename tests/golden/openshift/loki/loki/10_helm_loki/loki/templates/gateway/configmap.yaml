@@ -216,65 +216,65 @@ data:
     \ off;\n      allow 127.0.0.1;\n      deny all;\n      server_tokens on;  # expose\
     \ nginx version\n    }\n\n    ########################################################\n\
     \    # Configure backend targets\n    location ^~ /ui {\n      \n      set $backend\
-    \     \"http://loki-read.syn-loki.svc.cluster.local:3100\";\n      proxy_pass\
+    \     \"http://loki-querier.syn-loki.svc.cluster.local:3100\";\n      proxy_pass\
     \       $backend$request_uri;\n    }\n\n    # Distributor\n    location = /api/prom/push\
-    \ {\n      \n      set $backend     \"http://loki-write.syn-loki.svc.cluster.local:3100\"\
+    \ {\n      \n      set $backend     \"http://loki-distributor.syn-loki.svc.cluster.local:3100\"\
     ;\n      proxy_pass       $backend$request_uri;\n    }\n    location = /loki/api/v1/push\
-    \ {\n      \n      set $backend     \"http://loki-write.syn-loki.svc.cluster.local:3100\"\
+    \ {\n      \n      set $backend     \"http://loki-distributor.syn-loki.svc.cluster.local:3100\"\
     ;\n      proxy_pass       $backend$request_uri;\n    }\n    location = /distributor/ring\
-    \ {\n      \n      set $backend     \"http://loki-write.syn-loki.svc.cluster.local:3100\"\
+    \ {\n      \n      set $backend     \"http://loki-distributor.syn-loki.svc.cluster.local:3100\"\
     ;\n      proxy_pass       $backend$request_uri;\n    }\n    location = /otlp/v1/logs\
-    \ {\n      \n      set $backend     \"http://loki-write.syn-loki.svc.cluster.local:3100\"\
+    \ {\n      \n      set $backend     \"http://loki-distributor.syn-loki.svc.cluster.local:3100\"\
     ;\n      proxy_pass       $backend$request_uri;\n    }\n\n    # Ingester\n   \
-    \ location = /flush {\n      \n      set $backend     \"http://loki-write.syn-loki.svc.cluster.local:3100\"\
+    \ location = /flush {\n      \n      set $backend     \"http://loki-ingester.syn-loki.svc.cluster.local:3100\"\
     ;\n      proxy_pass       $backend$request_uri;\n    }\n    location ^~ /ingester/\
-    \ {\n      \n      set $backend     \"http://loki-write.syn-loki.svc.cluster.local:3100\"\
+    \ {\n      \n      set $backend     \"http://loki-ingester.syn-loki.svc.cluster.local:3100\"\
     ;\n      proxy_pass       $backend$request_uri;\n    }\n    location = /ingester\
     \ {\n      \n      internal;        # to suppress 301\n    }\n\n    # Ring\n \
-    \   location = /ring {\n      \n      set $backend     \"http://loki-write.syn-loki.svc.cluster.local:3100\"\
+    \   location = /ring {\n      \n      set $backend     \"http://loki-ingester.syn-loki.svc.cluster.local:3100\"\
     ;\n      proxy_pass       $backend$request_uri;\n    }\n\n    # MemberListKV\n\
-    \    location = /memberlist {\n      \n      set $backend     \"http://loki-write.syn-loki.svc.cluster.local:3100\"\
+    \    location = /memberlist {\n      \n      set $backend     \"http://loki-ingester.syn-loki.svc.cluster.local:3100\"\
     ;\n      proxy_pass       $backend$request_uri;\n    }\n\n    # Ruler\n    location\
-    \ = /ruler/ring {\n      \n      set $backend     \"http://loki-backend.syn-loki.svc.cluster.local:3100\"\
+    \ = /ruler/ring {\n      \n      set $backend     \"http://loki-ruler.syn-loki.svc.cluster.local:3100\"\
     ;\n      proxy_pass       $backend$request_uri;\n    }\n    location = /api/prom/rules\
-    \ {\n      \n      set $backend     \"http://loki-backend.syn-loki.svc.cluster.local:3100\"\
+    \ {\n      \n      set $backend     \"http://loki-ruler.syn-loki.svc.cluster.local:3100\"\
     ;\n      proxy_pass       $backend$request_uri;\n    }\n    location ^~ /api/prom/rules/\
-    \ {\n      \n      set $backend     \"http://loki-backend.syn-loki.svc.cluster.local:3100\"\
+    \ {\n      \n      set $backend     \"http://loki-ruler.syn-loki.svc.cluster.local:3100\"\
     ;\n      proxy_pass       $backend$request_uri;\n    }\n    location = /loki/api/v1/rules\
-    \ {\n      \n      set $backend     \"http://loki-backend.syn-loki.svc.cluster.local:3100\"\
+    \ {\n      \n      set $backend     \"http://loki-ruler.syn-loki.svc.cluster.local:3100\"\
     ;\n      proxy_pass       $backend$request_uri;\n    }\n    location ^~ /loki/api/v1/rules/\
-    \ {\n      \n      set $backend     \"http://loki-backend.syn-loki.svc.cluster.local:3100\"\
+    \ {\n      \n      set $backend     \"http://loki-ruler.syn-loki.svc.cluster.local:3100\"\
     ;\n      proxy_pass       $backend$request_uri;\n    }\n    location = /prometheus/api/v1/alerts\
-    \ {\n      \n      set $backend     \"http://loki-backend.syn-loki.svc.cluster.local:3100\"\
+    \ {\n      \n      set $backend     \"http://loki-ruler.syn-loki.svc.cluster.local:3100\"\
     ;\n      proxy_pass       $backend$request_uri;\n    }\n    location = /prometheus/api/v1/rules\
-    \ {\n      \n      set $backend     \"http://loki-backend.syn-loki.svc.cluster.local:3100\"\
+    \ {\n      \n      set $backend     \"http://loki-ruler.syn-loki.svc.cluster.local:3100\"\
     ;\n      proxy_pass       $backend$request_uri;\n    }\n\n    # Compactor\n  \
-    \  location = /compactor/ring {\n      \n      set $backend     \"http://loki-backend.syn-loki.svc.cluster.local:3100\"\
+    \  location = /compactor/ring {\n      \n      set $backend     \"http://loki-compactor.syn-loki.svc.cluster.local:3100\"\
     ;\n      proxy_pass       $backend$request_uri;\n    }\n    location = /loki/api/v1/delete\
-    \ {\n      \n      set $backend     \"http://loki-backend.syn-loki.svc.cluster.local:3100\"\
+    \ {\n      \n      set $backend     \"http://loki-compactor.syn-loki.svc.cluster.local:3100\"\
     ;\n      proxy_pass       $backend$request_uri;\n    }\n    location = /loki/api/v1/cache/generation_numbers\
-    \ {\n      \n      set $backend     \"http://loki-backend.syn-loki.svc.cluster.local:3100\"\
+    \ {\n      \n      set $backend     \"http://loki-compactor.syn-loki.svc.cluster.local:3100\"\
     ;\n      proxy_pass       $backend$request_uri;\n    }\n\n    # IndexGateway\n\
-    \    location = /indexgateway/ring {\n      \n      set $backend     \"http://loki-backend.syn-loki.svc.cluster.local:3100\"\
+    \    location = /indexgateway/ring {\n      \n      set $backend     \"http://loki-index-gateway.syn-loki.svc.cluster.local:3100\"\
     ;\n      proxy_pass       $backend$request_uri;\n    }\n\n    # QueryScheduler\n\
-    \    location = /scheduler/ring {\n      \n      set $backend     \"http://loki-backend.syn-loki.svc.cluster.local:3100\"\
+    \    location = /scheduler/ring {\n      \n      set $backend     \"http://loki-query-scheduler.syn-loki.svc.cluster.local:3100\"\
     ;\n      proxy_pass       $backend$request_uri;\n    }\n\n    # Config\n    location\
-    \ = /config {\n      \n      set $backend     \"http://loki-write.syn-loki.svc.cluster.local:3100\"\
+    \ = /config {\n      \n      set $backend     \"http://loki-ingester.syn-loki.svc.cluster.local:3100\"\
     ;\n      proxy_pass       $backend$request_uri;\n    }\n\n    # QueryFrontend,\
     \ Querier\n    location = /api/prom/tail {\n      proxy_set_header Upgrade $http_upgrade;\n\
     \      proxy_set_header Connection \"upgrade\";\n      \n      set $backend  \
-    \   \"http://loki-read.syn-loki.svc.cluster.local:3100\";\n      proxy_pass  \
-    \     $backend$request_uri;\n    }\n    location = /loki/api/v1/tail {\n     \
-    \ proxy_set_header Upgrade $http_upgrade;\n      proxy_set_header Connection \"\
-    upgrade\";\n      \n      set $backend     \"http://loki-read.syn-loki.svc.cluster.local:3100\"\
+    \   \"http://loki-query-frontend.syn-loki.svc.cluster.local:3100\";\n      proxy_pass\
+    \       $backend$request_uri;\n    }\n    location = /loki/api/v1/tail {\n   \
+    \   proxy_set_header Upgrade $http_upgrade;\n      proxy_set_header Connection\
+    \ \"upgrade\";\n      \n      set $backend     \"http://loki-query-frontend.syn-loki.svc.cluster.local:3100\"\
     ;\n      proxy_pass       $backend$request_uri;\n    }\n    location ^~ /api/prom/\
-    \ {\n      \n      set $backend     \"http://loki-read.syn-loki.svc.cluster.local:3100\"\
+    \ {\n      \n      set $backend     \"http://loki-query-frontend.syn-loki.svc.cluster.local:3100\"\
     ;\n      proxy_pass       $backend$request_uri;\n    }\n    location = /api/prom\
     \ {\n      \n      internal;        # to suppress 301\n    }\n    location ^~\
     \ /loki/api/v1/ {\n      # pass custom headers set by Grafana as X-Query-Tags\
     \ which are logged as key/value pairs in metrics.go log messages\n      proxy_set_header\
     \ X-Query-Tags \"${query_tags},user=${http_x_grafana_user},dashboard_id=${http_x_dashboard_uid},dashboard_title=${http_x_dashboard_title},panel_id=${http_x_panel_id},panel_title=${http_x_panel_title},source_rule_uid=${http_x_rule_uid},rule_name=${http_x_rule_name},rule_folder=${http_x_rule_folder},rule_version=${http_x_rule_version},rule_source=${http_x_rule_source},rule_type=${http_x_rule_type}\"\
-    ;\n      \n      set $backend     \"http://loki-read.syn-loki.svc.cluster.local:3100\"\
+    ;\n      \n      set $backend     \"http://loki-query-frontend.syn-loki.svc.cluster.local:3100\"\
     ;\n      proxy_pass       $backend$request_uri;\n    }\n    location = /loki/api/v1\
     \ {\n      \n      internal;        # to suppress 301\n    }\n  }\n}\n"
 kind: ConfigMap

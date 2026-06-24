@@ -41,8 +41,6 @@ local components = com.makeMergeable({
   } + com.makeMergeable(params.components.indexGateway),
   // Ingress Configuration
   gateway: {
-    [if params.components.gateway.enabled then 'enabledNonEnterprise']: params.components.gateway.enabled,
-    extraEnvFrom: [ { secretRef: { name: '%s-bucket-secret' % inv.parameters._instance } } ],
     extraArgs: [ '-config.expand-env=true' ],
     nodeSelector: std.get(params.components.gateway, 'nodeSelector', globalConfig.nodeSelector),
   } + com.makeMergeable(params.components.gateway),
@@ -204,6 +202,7 @@ local hardRestrictions = com.makeMergeable({
 });
 
 {
+  ['%s-components' % inv.parameters._instance]: components + caches + experimental,
   ['%s-configs' % inv.parameters._instance]: openshift + images + global + loki + ingress,
   ['%s-overrides' % inv.parameters._instance]: params.helm_values + hardRestrictions,
 }
