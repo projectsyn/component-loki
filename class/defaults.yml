@@ -97,12 +97,13 @@ parameters:
         #increase if auth credentials change
         secretVersion: 0
 
-    secrets: {}
-
+    monitoring: true
     alerts:
       additionalRules: {}
       patchRules:
         ignoreNames: []
         patches: {}
+
+    secrets: {}
 
     helm_values: {}

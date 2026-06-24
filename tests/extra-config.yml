@@ -35,3 +35,5 @@ parameters:
     s3:
       endpoint: 's3.example.com'
       region: 'us-east-1'
+
+    monitoring: false
