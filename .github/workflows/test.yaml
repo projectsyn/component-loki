@@ -36,7 +36,6 @@ jobs:
           - legacy
           - extra-config
           - openshift
-          - prometheus
     defaults:
       run:
         working-directory: ${{ env.COMPONENT_NAME }}
@@ -55,7 +54,6 @@ jobs:
           - legacy
           - extra-config
           - openshift
-          - prometheus
     defaults:
       run:
         working-directory: ${{ env.COMPONENT_NAME }}
