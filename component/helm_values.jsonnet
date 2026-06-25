@@ -131,6 +131,14 @@ local global = com.makeMergeable({
       bucketSecretVersion: '%s' % params.s3.auth.secretVersion,
     },
   },
+  [if params.monitoring then 'monitoring']: {
+    serviceMonitor: {
+      enabled: params.monitoring,
+    },
+    rules: {
+      enabled: params.monitoring,
+    },
+  },
   lokiCanary: {
     enabled: false,
   },

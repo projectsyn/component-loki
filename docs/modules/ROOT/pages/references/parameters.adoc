@@ -555,25 +555,18 @@ s3:
 Configure access- and secret key for the S3 storage.
 
 
-== `secrets`
+== `monitoring`
 
 [horizontal]
 type:: dict
-default:: `{}`
-example::
+default::
 +
 [source,yaml]
 ----
-secrets:
-  loki-bucket-secret:
-    stringData:
-      S3_ACCESS_KEY_ID: null
-      S3_SECRET_ACCESS_KEY: null
-      S3_ENDPOINT: null
+monitoring: true
 ----
 
-A dict of secrets to create in the namespace. The key is the name of the secret, the value is the content of the secret.
-The value must be a dict with a key `stringData` which is a dict of key/value pairs to add to the secret.
+Enable the service monitors, rules, and alerts from the Helm chart.
 
 
 == `alerts`
@@ -642,6 +635,28 @@ The keys in the `patches` parameter correspond to the field `alert` of the alert
 The component expects valid partial Prometheus alert rule objects as values.
 
 IMPORTANT: The provided values aren't validated, they're applied to the corresponding upstream alert as-is.
+
+
+
+== `secrets`
+
+[horizontal]
+type:: dict
+default:: `{}`
+example::
++
+[source,yaml]
+----
+secrets:
+  loki-bucket-secret:
+    stringData:
+      S3_ACCESS_KEY_ID: null
+      S3_SECRET_ACCESS_KEY: null
+      S3_ENDPOINT: null
+----
+
+A dict of secrets to create in the namespace. The key is the name of the secret, the value is the content of the secret.
+The value must be a dict with a key `stringData` which is a dict of key/value pairs to add to the secret.
 
 
 == `helm_values`
