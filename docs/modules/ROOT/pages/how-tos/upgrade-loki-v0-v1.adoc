@@ -41,6 +41,39 @@ helm_values:
 
 Remove the parameters from "Step 1" and deploy again.
 
+=== New Namespace Naming
+
+[IMPORTANT]
+====
+This component will change the default name of the namespace to the instance name.
+It is also no longer allowed to configure an non-instantiated version.
+====
+
+If you have configured a namespace name that is different than the instance name, then change the namespace name here:
+
+[source,yaml]
+----
+namespace:
+  name: ${_instance} <1>
+----
+<1> Overwrite the default namespace name.
+
+If you have configured the component in a non-instantiated version, then change the following:
+
+[source,yaml]
+----
+applications:
+  - loki as your-new-instance-name <1>
+
+parameters:
+  your_new_instance_name: <2>
+    namespace:
+      name: ${_instance} <3>
+----
+<1> Redefine the component include in `applications`.
+<2> Rename the component configuration as your new instance name.
+<3> Overwrite the default namespace name.
+
 === (Optional) Consider disabling Zone Aware Replication
 
 [IMPORTANT]

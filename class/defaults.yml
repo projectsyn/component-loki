@@ -4,9 +4,8 @@ parameters:
       multi_instance: true
       multi_tenant: true
 
-    name: ${_instance}
     namespace:
-      name: syn-loki
+      name: ${_instance}
       create: true
       metadata: {}
 

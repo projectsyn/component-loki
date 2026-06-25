@@ -47,6 +47,8 @@ local prom =
 // The hiera parameters for the component
 local params = inv.parameters.loki;
 
+// Prevent using non-instantiated configuration of this component
+assert inv.parameters._instance != 'loki' : "configuring non-instantiated component isn't allowed";
 
 local secrets = com.generateResources(
   {
