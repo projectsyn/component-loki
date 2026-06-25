@@ -90,6 +90,39 @@ local openshift = if isOpenshift then com.makeMergeable({
     dnsService: 'dns-default',
     dnsNamespace: 'openshift-dns',
   },
+  loki: {
+    podSecurityContext: {
+      fsGroup: null,
+      runAsGroup: null,
+      runAsNonRoot: true,
+      runAsUser: null,
+    },
+  },
+  gateway: {
+    podSecurityContext: {
+      fsGroup: null,
+      runAsGroup: null,
+      runAsNonRoot: true,
+      runAsUser: null,
+    },
+    metrics: {
+      containerSecurityContext: {
+        privileged: null,
+        runAsGroup: null,
+        runAsNonRoot: null,
+        runAsUser: null,
+      },
+    },
+  },
+  rbac: {
+    sccEnabled: false,
+  },
+  memcached: {
+    podSecurityContext: null,
+  },
+  lokiCanary: {
+    podSecurityContext: null,
+  },
 }) else {};
 
 local images = com.makeMergeable({

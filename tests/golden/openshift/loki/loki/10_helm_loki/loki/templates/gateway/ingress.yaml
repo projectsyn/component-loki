@@ -21,14 +21,7 @@ spec:
                 name: loki-gateway
                 port:
                   number: 80
-            path: /loki/api/v1/push
-            pathType: Prefix
-          - backend:
-              service:
-                name: loki-gateway
-                port:
-                  number: 80
-            path: /otlp/v1/logs
+            path: /
             pathType: Prefix
   tls:
     - hosts:
