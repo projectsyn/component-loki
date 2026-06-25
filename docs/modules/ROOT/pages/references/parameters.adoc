@@ -555,6 +555,169 @@ s3:
 Configure access- and secret key for the S3 storage.
 
 
+== `ingress`
+
+Ingress configuration
+
+=== `ingress.enabled`
+
+[horizontal]
+type:: boolean
+default::
++
+[source,yaml]
+----
+ingress:
+  enabled: false
+----
+
+Enables ingress.
+
+=== `ingress.tls.enabled`
+
+[horizontal]
+type:: dict
+default::
++
+[source,yaml]
+----
+ingress:
+  tls:
+    enabled: true
+----
+
+Enables using TLS for ingress.
+
+=== `ingress.tls.clusterIssuer`
+
+[horizontal]
+type:: dict
+default::
++
+[source,yaml]
+----
+ingress:
+  tls:
+    clusterIssuer: letsencrypt-production
+----
+
+Configures the annotation for the cert-manager `ClusterIssuer`, this component assumes cert-manager is installed.
+
+=== `ingress.tls.key` and `ingress.tls.cert`
+
+[horizontal]
+type:: dict
+default::
++
+[source,yaml]
+----
+ingress:
+  tls:
+    key: null
+    cert: null
+----
+default::
++
+[source,yaml]
+----
+ingress:
+  tls:
+    clusterIssuer: null
+    key: |
+      -----BEGIN PRIVATE KEY-----
+      ...
+      -----END PRIVATE KEY-----
+    cert: |
+      -----BEGIN CERTIFICATE-----
+      ...
+      -----END CERTIFICATE-----
+----
+
+Configures private key and certificate for TLS.
+The secret will automatically be created.
+
+[TIP]
+====
+This requires `ingress.tls.clusterIssuer` to be null.
+If both are enabled, `ingress.tls.clusterIssuer` takes precedence.
+====
+
+=== `ingress.url`
+
+[horizontal]
+type:: dict
+default::
++
+[source,yaml]
+----
+ingress:
+  url: ''
+----
+
+The URL for witch the ingress is configured.
+
+=== `ingress.annotations` and `ingress.labels`
+
+[horizontal]
+type:: dict
+default::
++
+[source,yaml]
+----
+ingress:
+  annotations: {}
+  labels: {}
+----
+example::
++
+[source,yaml]
+----
+ingress:
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-staging
+----
+
+Add custom annotations and labels.
+
+
+== `basicAuth`
+
+Configures basic authentication for nginx.
+
+=== `basicAuth.enabled`
+
+[horizontal]
+type:: boolean
+default::
++
+[source,yaml]
+----
+basicAuth:
+  enabled: false
+----
+
+Enables basic authentication for nginx.
+
+=== `basicAuth.htpasswd`
+
+[horizontal]
+type:: boolean
+default::
++
+[source,yaml]
+----
+basicAuth:
+  htpasswd: '?{vaultkv:${cluster:tenant}/${cluster:name}/${_instance}/htpasswd}'
+----
+
+The content of the `.htpasswd` file.
+
+[TIP]
+====
+If you set the `basicAuth.htpasswd: null`, you can use the `basicAuth.existingSecret` to inlcude an existing secret.
+====
+
+
 == `monitoring`
 
 [horizontal]
@@ -614,7 +777,7 @@ All rules defined in this parameter will be added to rule group `loki-custom.rul
 
 [horizontal]
 type:: dict
-default:: https://github.com/projectsyn/component-mimir/blob/master/class/defaults.yml[See `class/defaults.yml`]
+default:: https://github.com/projectsyn/component-loki/blob/master/class/defaults.yml[See `class/defaults.yml`]
 example::
 +
 [source,yaml]

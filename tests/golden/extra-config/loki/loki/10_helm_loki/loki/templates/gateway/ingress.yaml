@@ -1,0 +1,28 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  labels:
+    app.kubernetes.io/component: gateway
+    app.kubernetes.io/instance: loki
+    app.kubernetes.io/name: loki
+    app.kubernetes.io/version: 3.7.2
+    custom-label: my-label
+    helm.sh/chart: loki-17.4.11
+  name: loki-gateway
+  namespace: syn-loki
+spec:
+  rules:
+    - host: metrics-receive.example.com
+      http:
+        paths:
+          - backend:
+              service:
+                name: loki-gateway
+                port:
+                  number: 80
+            path: /
+            pathType: Prefix
+  tls:
+    - hosts:
+        - metrics-receive.example.com
+      secretName: metrics-receive-example-com-tls

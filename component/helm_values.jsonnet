@@ -196,6 +196,33 @@ local loki = com.makeMergeable({
 
 // Loki Config
 local ingress = com.makeMergeable({
+  [if params.components.gateway.enabled then 'gateway']: {
+    ingress: {
+      enabled: params.ingress.enabled,
+      [if params.ingress.tls.enabled && params.ingress.tls.clusterIssuer != null then 'annotations']: {
+        'cert-manager.io/cluster-issuer': params.ingress.tls.clusterIssuer,
+      } + if std.objectHas(params.ingress, 'annotations') then com.makeMergeable(params.ingress.annotations) else {},
+      [if std.objectHas(params.ingress, 'labels') then 'labels']: params.ingress.labels,
+      hosts: [ {
+        host: params.ingress.url,
+        paths: [
+          {
+            path: '/',
+            pathType: 'Prefix',
+          },
+        ],
+      } ],
+      [if params.ingress.tls.enabled then 'tls']: [ {
+        hosts: [ params.ingress.url ],
+        secretName: '%s-tls' % std.strReplace(params.ingress.url, '.', '-'),
+      } ],
+    },
+    basicAuth: {
+      enabled: params.basicAuth.enabled,
+      [if params.basicAuth.htpasswd != null && !std.objectHas(params.basicAuth, 'existingSecret') then 'existingSecret']: '%s-nginx-htpasswd' % inv.parameters._instance,
+      [if std.objectHas(params.basicAuth, 'existingSecret') then 'existingSecret']: params.basicAuth.existingSecret,
+    },
+  },
 });
 
 // hardcoded removal of rollout-operator

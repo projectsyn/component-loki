@@ -25,6 +25,7 @@ parameters:
       loki-nginx-htpasswd:
         stringData:
           .htpasswd: "?{vaultkv:${cluster:tenant}/${cluster:name}/vshn-appuio-loki/htpasswd}"
+
     helm_values:
       loki:
         compactor:

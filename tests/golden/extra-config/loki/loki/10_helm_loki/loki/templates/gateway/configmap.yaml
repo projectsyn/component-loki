@@ -209,15 +209,15 @@ data:
     \  map $http_x_query_tags $query_tags {\n    \"\"        \"noop=\";          \
     \  # When header is empty, set noop=\n    default   $http_x_query_tags; # Otherwise,\
     \ preserve the original value\n  }\n\n  server {\n    listen             8080;\n\
-    \    listen             [::]:8080;\n\n    location = / {\n      \n      return\
-    \ 200 'OK';\n      auth_basic off;\n    }\n\n    location = /stub_status {\n \
-    \     stub_status on;\n      satisfy any;\n      access_log off;\n      allow\
-    \ 127.0.0.1;\n      deny all;\n      server_tokens on;  # expose nginx version\n\
-    \    }\n\n    ########################################################\n    #\
-    \ Configure backend targets\n    location ^~ /ui {\n      \n      set $backend\
-    \     \"http://loki-querier.syn-loki.svc.cluster.local:3100\";\n      proxy_pass\
-    \       $backend$request_uri;\n    }\n\n    # Distributor\n    location = /api/prom/push\
-    \ {\n      \n      set $backend     \"http://loki-distributor.syn-loki.svc.cluster.local:3100\"\
+    \    listen             [::]:8080;\n    auth_basic           \"Loki\";\n    auth_basic_user_file\
+    \ /etc/nginx/secrets/.htpasswd;\n\n    location = / {\n      \n      return 200\
+    \ 'OK';\n      auth_basic off;\n    }\n\n    location = /stub_status {\n     \
+    \ stub_status on;\n      satisfy any;\n      access_log off;\n      allow 127.0.0.1;\n\
+    \      deny all;\n      server_tokens on;  # expose nginx version\n    }\n\n \
+    \   ########################################################\n    # Configure\
+    \ backend targets\n    location ^~ /ui {\n      \n      set $backend     \"http://loki-querier.syn-loki.svc.cluster.local:3100\"\
+    ;\n      proxy_pass       $backend$request_uri;\n    }\n\n    # Distributor\n\
+    \    location = /api/prom/push {\n      \n      set $backend     \"http://loki-distributor.syn-loki.svc.cluster.local:3100\"\
     ;\n      proxy_pass       $backend$request_uri;\n    }\n    location = /loki/api/v1/push\
     \ {\n      \n      set $backend     \"http://loki-distributor.syn-loki.svc.cluster.local:3100\"\
     ;\n      proxy_pass       $backend$request_uri;\n    }\n    location = /distributor/ring\
