@@ -117,7 +117,8 @@ spec:
             seccompProfile:
               type: RuntimeDefault
       initContainers: []
-      nodeSelector: {}
+      nodeSelector:
+        appuio.io/node-class: plus
       securityContext:
         fsGroup: 11211
         runAsGroup: 11211

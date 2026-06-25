@@ -32,7 +32,7 @@ parameters:
         registry: ghcr.io
         repository: jkroepke/access-log-exporter
 
-    preset: legacy
+    preset: extra-small
 
     components:
       # Read Path

@@ -1,0 +1,65 @@
+= Upgrade component version v0 to v1
+
+Version 1.x is a major overhaul of the configuration parameters of the component,
+https://github.com/projectsyn/component-loki/releases/tag/v1.0.0[see Release Notes] for more details.
+
+The component has lots of options to configure each part of the Loki installation.
+Please have a look at the xref:references/parameters.adoc[parameters documentation] for reference.
+
+[IMPORTANT]
+====
+As of March 16, 2026, the Grafana Loki Helm chart for OSS users has moved to grafana-community/helm-charts (forked at chart version 6.55.0).
+This component will no longer support Helm charts from grafana/loki, instead it uses Helm charts from grafana-community (> v17.x).
+====
+
+
+== Explanation of configuration changes
+
+=== Migrate to Deployment Mode `Distributed`
+
+[IMPORTANT]
+====
+Prior version of this component used the deployment mode `SimpleScalable`, see https://grafana.com/docs/loki/latest/get-started/deployment-modes/#simple-scalable[Loki Documentation].
+This mode is deprecated and will be removed with Loki v4.
+Only the preset `legacy` will support `SimpleScalable`, but it is strongly adviced to switch away from `SimpleScalable` and `legacy`.
+====
+
+==== Step 1
+
+Deploy v1.x of this component with the following parameters:
+
+[source,yaml]
+----
+preset: legacy <1>
+helm_values:
+  deploymentMode: SimpleScalable<->Distributed <2>
+----
+<1> Uses `legacy` preset for component configuration.
+<2> Prepares for the transition to `Distributed`.
+
+==== Step 2
+
+Remove the parameters from "Step 1" and deploy again.
+
+=== New Default Resource Requests
+
+[IMPORTANT]
+====
+This component changes its default resource requests and limits, please check the output of your catalog compilation and adjust if needed.
+See xref:references/parameters.adoc#_components[components] and xref:references/parameters.adoc#_caches[caches] to adjust your settings.
+====
+
+This component supports the following presets:
+
+* `none`: Use the Helm charts defaults.
+* `legacy`: Component defaults for migrating to v1.
+* `extra-small`: Component defaults for small production deployments (default).
+
+=== legacy `globalNodeSelector`
+
+The values for the global node selector has moved to `global.nodeSelector`.
+
+[TIP]
+====
+This change is backward compatible, but migrating the values to the new structure is recommended.
+====
