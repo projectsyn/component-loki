@@ -1,5 +1,6 @@
 applications:
   - openshift4-monitoring
+  - rollout-operator
 
 parameters:
   kapitan:
@@ -30,6 +31,10 @@ parameters:
 
     components:
       ruler:
+        enabled: true
+
+    global:
+      zoneAwareReplication:
         enabled: true
 
     s3:

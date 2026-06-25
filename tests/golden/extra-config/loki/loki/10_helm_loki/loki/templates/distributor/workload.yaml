@@ -50,6 +50,7 @@ spec:
             - -config.expand-env=true
             - -memberlist.advertise-addr=$(POD_IP)
             - -target=distributor
+            - -distributor.zone-awareness-enabled=true
           env:
             - name: GOMEMLIMIT
               value: 3481MiB

@@ -472,6 +472,41 @@ global:
 
 Global logs retention.
 
+=== `global.zoneAwareReplication`
+
+[horizontal]
+type:: dict
+default::
++
+[source,yaml]
+----
+global:
+  zoneAwareReplication:
+    enabled: false
+    topologyKey: 'kubernetes.io/hostname'
+----
+example::
++
+[source,yaml]
+----
+global:
+  zoneAwareReplication:
+    enabled: true
+    zones:
+      - name: zone-a
+        nodeSelector:
+          topology.kubernetes.io/zone: 'zone-a'
+      - name: zone-b
+        nodeSelector:
+          topology.kubernetes.io/zone: 'zone-b'
+      - name: zone-c
+        nodeSelector:
+          topology.kubernetes.io/zone: 'zone-c'
+----
+
+Zone-aware replication is the replication of data across failure domains.
+Zone-aware replication helps to avoid data loss during a domain outage. Grafana Loki defines failure domains as zones.
+
 
 == `s3`
 

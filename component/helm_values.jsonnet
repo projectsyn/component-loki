@@ -10,7 +10,12 @@ local hasRolloutOperator = std.member(inv.applications, 'rollout-operator');
 // Global Params and Zone Aware Replication
 local globalConfig = params.global + com.makeMergeable({
   nodeSelector: std.get(params, 'globalNodeSelector', params.global.nodeSelector),
-  zoneAwareReplication: if hasRolloutOperator then params.global.zoneAwareReplication else std.trace('rollout-operator must be installed', {}),
+  zoneAwareReplication: params.global.zoneAwareReplication {
+    enabled: if params.global.zoneAwareReplication.enabled then
+      // Assert that zone aware replication is only enabled if rollout-operator is installed
+      if hasRolloutOperator then true else error 'rollout-operator must be installed for zone-aware replication'
+    else false,
+  },
 });
 
 local components = com.makeMergeable({
@@ -234,6 +239,11 @@ local hardRestrictions = com.makeMergeable({
     enabled: false,
   },
   [if !std.member([ 'none', 'legacy' ], params.preset) then 'deploymentMode']: 'Distributed',
+  ingester: {
+    zoneAwareReplication: {
+      enabled: if hasRolloutOperator && params.global.zoneAwareReplication.enabled then true else false,
+    },
+  },
 });
 
 {

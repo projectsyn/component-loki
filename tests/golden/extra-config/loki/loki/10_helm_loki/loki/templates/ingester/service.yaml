@@ -66,3 +66,117 @@ spec:
     app.kubernetes.io/instance: loki
     app.kubernetes.io/name: loki
   type: ClusterIP
+--- null
+---
+apiVersion: v1
+kind: Service
+metadata:
+  annotations: null
+  labels:
+    app.kubernetes.io/component: ingester
+    app.kubernetes.io/instance: loki
+    app.kubernetes.io/name: loki
+    app.kubernetes.io/version: 3.7.2
+    helm.sh/chart: loki-17.4.11
+    prometheus.io/service-monitor: 'false'
+    variant: headless
+  name: loki-ingester-zone-a-headless
+  namespace: syn-loki
+spec:
+  clusterIP: None
+  ports:
+    - name: http-metrics
+      port: 3100
+      protocol: TCP
+      targetPort: http-metrics
+    - name: grpc
+      port: 9095
+      protocol: TCP
+      targetPort: grpc
+    - name: grpclb
+      port: 9096
+      protocol: TCP
+      targetPort: grpc
+  selector:
+    app.kubernetes.io/component: ingester
+    app.kubernetes.io/instance: loki
+    app.kubernetes.io/name: loki
+    name: ingester-zone-a
+    rollout-group: ingester
+  type: ClusterIP
+--- null
+---
+apiVersion: v1
+kind: Service
+metadata:
+  annotations: null
+  labels:
+    app.kubernetes.io/component: ingester
+    app.kubernetes.io/instance: loki
+    app.kubernetes.io/name: loki
+    app.kubernetes.io/version: 3.7.2
+    helm.sh/chart: loki-17.4.11
+    prometheus.io/service-monitor: 'false'
+    variant: headless
+  name: loki-ingester-zone-b-headless
+  namespace: syn-loki
+spec:
+  clusterIP: None
+  ports:
+    - name: http-metrics
+      port: 3100
+      protocol: TCP
+      targetPort: http-metrics
+    - name: grpc
+      port: 9095
+      protocol: TCP
+      targetPort: grpc
+    - name: grpclb
+      port: 9096
+      protocol: TCP
+      targetPort: grpc
+  selector:
+    app.kubernetes.io/component: ingester
+    app.kubernetes.io/instance: loki
+    app.kubernetes.io/name: loki
+    name: ingester-zone-b
+    rollout-group: ingester
+  type: ClusterIP
+--- null
+---
+apiVersion: v1
+kind: Service
+metadata:
+  annotations: null
+  labels:
+    app.kubernetes.io/component: ingester
+    app.kubernetes.io/instance: loki
+    app.kubernetes.io/name: loki
+    app.kubernetes.io/version: 3.7.2
+    helm.sh/chart: loki-17.4.11
+    prometheus.io/service-monitor: 'false'
+    variant: headless
+  name: loki-ingester-zone-c-headless
+  namespace: syn-loki
+spec:
+  clusterIP: None
+  ports:
+    - name: http-metrics
+      port: 3100
+      protocol: TCP
+      targetPort: http-metrics
+    - name: grpc
+      port: 9095
+      protocol: TCP
+      targetPort: grpc
+    - name: grpclb
+      port: 9096
+      protocol: TCP
+      targetPort: grpc
+  selector:
+    app.kubernetes.io/component: ingester
+    app.kubernetes.io/instance: loki
+    app.kubernetes.io/name: loki
+    name: ingester-zone-c
+    rollout-group: ingester
+  type: ClusterIP

@@ -41,6 +41,18 @@ helm_values:
 
 Remove the parameters from "Step 1" and deploy again.
 
+=== (Optional) Consider disabling Zone Aware Replication
+
+[IMPORTANT]
+====
+This version of the component disables zone aware replication by default, because the rollout-operator in this version of the component *installs CRDs* for certain functionalities.
+
+That can be a problem, when more than 1 instance of this component is installed.
+We recommend disabling zone aware replication, unless you need this feature and have a cluster that actually has multiple availability zones enabled.
+====
+
+See xref:references/parameters.adoc#_global[global configuration] for reference.
+
 === New Default Resource Requests
 
 [IMPORTANT]
