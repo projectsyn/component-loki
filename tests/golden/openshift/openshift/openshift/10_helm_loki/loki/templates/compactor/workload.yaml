@@ -5,8 +5,8 @@ metadata:
     app.kubernetes.io/component: compactor
     app.kubernetes.io/instance: openshift
     app.kubernetes.io/name: loki
-    app.kubernetes.io/version: 3.7.2
-    helm.sh/chart: loki-17.4.11
+    app.kubernetes.io/version: 3.7.3
+    helm.sh/chart: loki-18.1.1
   name: openshift-loki-compactor
   namespace: openshift
 spec:
@@ -29,8 +29,8 @@ spec:
         app.kubernetes.io/instance: openshift
         app.kubernetes.io/name: loki
         app.kubernetes.io/part-of: memberlist
-        app.kubernetes.io/version: 3.7.2
-        helm.sh/chart: loki-17.4.11
+        app.kubernetes.io/version: 3.7.3
+        helm.sh/chart: loki-18.1.1
     spec:
       affinity:
         podAntiAffinity:
@@ -60,7 +60,7 @@ spec:
           envFrom:
             - secretRef:
                 name: openshift-bucket-secret
-          image: docker.io/docker.io/grafana/loki:3.7.2
+          image: docker.io/docker.io/grafana/loki:3.7.3
           imagePullPolicy: IfNotPresent
           livenessProbe:
             failureThreshold: 10
