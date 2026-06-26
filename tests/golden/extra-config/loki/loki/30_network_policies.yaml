@@ -17,5 +17,12 @@ spec:
                 operator: In
                 values:
                   - vshn-grafana
+  podSelector:
+    matchExpressions:
+      - key: app.kubernetes.io/component
+        operator: In
+        values:
+          - gateway
+          - query-frontend
   policyTypes:
     - Ingress

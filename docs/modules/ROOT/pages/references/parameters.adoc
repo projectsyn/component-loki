@@ -610,10 +610,18 @@ Enables or disables NetworkPolicy.
 
 [TIP]
 ====
-The networkPolicy will only be deployed if it is `enabled` and has at least 1 entry in `allowedNamespaces`.
+The NetworkPolicy will only be deployed if it is `enabled` and has at least 1 entry in `allowedNamespaces` and `exposedComponents`.
 ====
 
 === `networkPolicy.enabled`
+
+[horizontal]
+type:: boolean
+default:: true
+
+Enable or disable the creation of NetworkPolicies.
+
+=== `networkPolicy.exposedComponents`
 
 [horizontal]
 type:: dict

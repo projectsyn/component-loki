@@ -81,36 +81,43 @@ local secrets = com.generateResources(
   }
 );
 
-local netpols = kube.NetworkPolicy('allow-from-other-namespaces') {
-  metadata+: {
-    labels+: {
-      'app.kubernetes.io/managed-by': 'commodore',
-      'app.kubernetes.io/name': 'allow-from-other-namespaces',
+local netpols =
+  local exposedComponents = com.renderArray(params.networkPolicy.exposedComponents);
+  local allowedNamespaces = com.renderArray(params.networkPolicy.allowedNamespaces);
+  if
+    params.networkPolicy.enabled
+    && std.length(exposedComponents) > 0
+    && std.length(allowedNamespaces) > 0
+  then kube.NetworkPolicy('allow-from-other-namespaces') {
+    metadata+: {
+      labels+: {
+        'app.kubernetes.io/managed-by': 'commodore',
+        'app.kubernetes.io/name': 'allow-from-other-namespaces',
+      },
+      namespace: params.namespace.name,
     },
-    namespace: params.namespace.name,
-  },
-  spec: {
-    policyTypes: [ 'Ingress' ],
-    [if std.length(params.networkPolicy.exposedComponents) > 0 then 'podSelector']: {
-      matchExpressions: [ {
-        key: 'app.kubernetes.io/component',
-        operator: 'In',
-        values: com.renderArray(params.networkPolicy.exposedComponents),
+    spec: {
+      policyTypes: [ 'Ingress' ],
+      podSelector: {
+        matchExpressions: [ {
+          key: 'app.kubernetes.io/component',
+          operator: 'In',
+          values: exposedComponents,
+        } ],
+      },
+      ingress: [ {
+        from: [ {
+          namespaceSelector: {
+            matchExpressions: [ {
+              key: 'kubernetes.io/metadata.name',
+              operator: 'In',
+              values: allowedNamespaces,
+            } ],
+          },
+        } ],
       } ],
     },
-    ingress: [ {
-      from: [ {
-        namespaceSelector: {
-          matchExpressions: [ {
-            key: 'kubernetes.io/metadata.name',
-            operator: 'In',
-            values: com.renderArray(params.networkPolicy.allowedNamespaces),
-          } ],
-        },
-      } ],
-    } ],
-  },
-};
+  } else {};
 
 // Define outputs below
 {
@@ -126,5 +133,5 @@ local netpols = kube.NetworkPolicy('allow-from-other-namespaces') {
       namespace: params.namespace.name,
     },
   },
-  [if params.networkPolicy.enabled && std.length(params.networkPolicy.allowedNamespaces) > 0 then '30_network_policies']: netpols,
+  [if std.length(netpols) > 0 then '30_network_policies']: netpols,
 }

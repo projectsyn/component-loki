@@ -42,7 +42,6 @@ parameters:
       region: 'us-east-1'
 
     networkPolicy:
-      enabled: false
       allowedNamespaces:
         - vshn-grafana
 
