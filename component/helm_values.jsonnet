@@ -127,37 +127,20 @@ local openshift = if isOpenshift then com.makeMergeable({
 
 local images = com.makeMergeable({
   loki: {
-    image: {
-      repository: '%(registry)s/%(repository)s' % params.images.loki,
-      [if std.objectHas(params.images.loki, 'tag') then 'tag']: params.images.loki.tag,
-    },
+    image: params.images.loki,
   },
   memcached: {
-    image: {
-      repository: '%(registry)s/%(repository)s' % params.images.memcached,
-      [if std.objectHas(params.images.memcached, 'tag') then 'tag']: params.images.memcached.tag,
-    },
+    image: params.images.memcached,
   },
   memcachedExporter: {
-    image: {
-      repository: '%(registry)s/%(repository)s' % params.images.memcachedExporter,
-      [if std.objectHas(params.images.memcachedExporter, 'tag') then 'tag']: params.images.memcachedExporter.tag,
-    },
+    image: params.images.memcachedExporter,
   },
   gateway: {
     nginx: {
-      image: {
-        registry: params.images.nginx.registry,
-        repository: params.images.nginx.repository,
-        [if std.objectHas(params.images.nginx, 'tag') then 'tag']: params.images.nginx.tag,
-      },
+      image: params.images.nginx,
     },
     metrics: {
-      image: {
-        registry: params.images.accessLogExporter.registry,
-        repository: params.images.accessLogExporter.repository,
-        [if std.objectHas(params.images.accessLogExporter, 'tag') then 'tag']: params.images.accessLogExporter.tag,
-      },
+      image: params.images.accessLogExporter,
     },
   },
 });

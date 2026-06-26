@@ -61,7 +61,7 @@ spec:
           envFrom:
             - secretRef:
                 name: openshift-bucket-secret
-          image: docker.io/docker.io/grafana/loki:3.7.3
+          image: docker.io/grafana/loki:3.7.3
           imagePullPolicy: IfNotPresent
           livenessProbe:
             failureThreshold: 10
