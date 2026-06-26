@@ -2,30 +2,30 @@ apiVersion: apps/v1
 kind: StatefulSet
 metadata:
   labels:
-    app.kubernetes.io/component: ruler
-    app.kubernetes.io/instance: defaults
+    app.kubernetes.io/component: pattern-ingester
+    app.kubernetes.io/instance: extra-config
     app.kubernetes.io/name: loki
     app.kubernetes.io/version: 3.7.3
     helm.sh/chart: loki-18.1.1
-  name: defaults-loki-ruler
-  namespace: defaults
+  name: extra-config-loki-pattern-ingester
+  namespace: extra-config
 spec:
-  replicas: 2
+  replicas: 0
   revisionHistoryLimit: 10
   selector:
     matchLabels:
-      app.kubernetes.io/component: ruler
-      app.kubernetes.io/instance: defaults
+      app.kubernetes.io/component: pattern-ingester
+      app.kubernetes.io/instance: extra-config
       app.kubernetes.io/name: loki
-  serviceName: defaults-loki-ruler-headless
+  serviceName: extra-config-loki-pattern-ingester-headless
   template:
     metadata:
       annotations:
-        checksum/config: deaa6a87d1aab9442e32ccf19a6b570a0e780f737f386704bbf5fd577a324749
-        kubectl.kubernetes.io/default-container: ruler
+        checksum/config: 3c1d2e71f51f12dc19ff070c24fcddc6753f403e393fcd255f274d5c757fb513
+        kubectl.kubernetes.io/default-container: pattern-ingester
       labels:
-        app.kubernetes.io/component: ruler
-        app.kubernetes.io/instance: defaults
+        app.kubernetes.io/component: pattern-ingester
+        app.kubernetes.io/instance: extra-config
         app.kubernetes.io/name: loki
         app.kubernetes.io/part-of: memberlist
         app.kubernetes.io/version: 3.7.3
@@ -36,8 +36,8 @@ spec:
           requiredDuringSchedulingIgnoredDuringExecution:
             - labelSelector:
                 matchLabels:
-                  app.kubernetes.io/component: ruler
-                  app.kubernetes.io/instance: defaults
+                  app.kubernetes.io/component: pattern-ingester
+                  app.kubernetes.io/instance: extra-config
                   app.kubernetes.io/name: loki
               topologyKey: kubernetes.io/hostname
       automountServiceAccountToken: true
@@ -46,10 +46,8 @@ spec:
             - -config.file=/etc/loki/config/config.yaml
             - -config.expand-env=true
             - -memberlist.advertise-addr=$(POD_IP)
-            - -target=ruler
+            - -target=pattern-ingester
           env:
-            - name: GOMEMLIMIT
-              value: 652MiB
             - name: GOGC
               value: '80'
             - name: POD_IP
@@ -58,8 +56,8 @@ spec:
                   fieldPath: status.podIP
           envFrom:
             - secretRef:
-                name: defaults-bucket-secret
-          image: docker.io/docker.io/grafana/loki:3.7.3
+                name: extra-config-bucket-secret
+          image: docker.io/dockerhub.vshn.net/grafana/loki:3.7.3
           imagePullPolicy: IfNotPresent
           livenessProbe:
             failureThreshold: 10
@@ -69,7 +67,7 @@ spec:
             periodSeconds: 30
             successThreshold: 1
             timeoutSeconds: 1
-          name: ruler
+          name: pattern-ingester
           ports:
             - containerPort: 3100
               name: http-metrics
@@ -89,12 +87,6 @@ spec:
             periodSeconds: 10
             successThreshold: 1
             timeoutSeconds: 1
-          resources:
-            limits:
-              memory: 768Mi
-            requests:
-              cpu: 250m
-              memory: 512Mi
           securityContext:
             allowPrivilegeEscalation: false
             capabilities:
@@ -121,8 +113,8 @@ spec:
         runAsUser: 10001
         seccompProfile:
           type: RuntimeDefault
-      serviceAccountName: defaults-loki
-      terminationGracePeriodSeconds: 300
+      serviceAccountName: extra-config-loki
+      terminationGracePeriodSeconds: 30
       volumes:
         - emptyDir: {}
           name: temp
@@ -137,3 +129,6 @@ spec:
           name: runtime-config
         - emptyDir: {}
           name: data
+  updateStrategy:
+    rollingUpdate:
+      partition: 0

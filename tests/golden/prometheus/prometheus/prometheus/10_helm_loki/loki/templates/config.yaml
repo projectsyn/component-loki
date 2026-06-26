@@ -85,17 +85,6 @@ data:
             consistent_hash: true
             timeout: 500ms
             update_interval: 1m
-    ruler:
-      storage:
-        s3:
-          access_key_id: ${S3_ACCESS_KEY_ID}
-          bucketnames: prometheus-ruler
-          insecure: false
-          s3forcepathstyle: true
-          secret_access_key: ${S3_SECRET_ACCESS_KEY}
-        type: s3
-      wal:
-        dir: /var/loki/ruler-wal
     runtime_config:
       file: /etc/loki/runtime-config/runtime-config.yaml
     schema_config:

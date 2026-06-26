@@ -22,7 +22,7 @@ spec:
   template:
     metadata:
       annotations:
-        checksum/config: b44dc2a41f07cbdbc2f2bfc21c14563d4677b2ba7189014f4c36cce5ed7065ae
+        checksum/config: ce50afec5572924f052536fad720dedf7e6b89ee8485007d1c915216b0feeeae
         kubectl.kubernetes.io/default-container: write
       labels:
         app.kubernetes.io/component: write

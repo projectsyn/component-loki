@@ -55,12 +55,12 @@ parameters:
       gateway:
         enabled: true
       # Optional
-      alertmanager:
-        enabled: true
       overridesExporter:
         enabled: true
+      patternIngester:
+        enabled: false
       ruler:
-        enabled: true
+        enabled: false
 
     caches:
       chunks:

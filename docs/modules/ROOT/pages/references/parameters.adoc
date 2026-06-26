@@ -249,21 +249,6 @@ components:
 The Loki gateway is a critical component for query, write, and alert paths.
 It improves performance and simplifies deployments by acting as a single entry point for all Loki requests.
 
-=== `components.alertmanager`
-
-[horizontal]
-type:: dict
-default::
-+
-[source,yaml]
-----
-components:
-  alertmanager:
-    enabled: true
-----
-
-The Loki Alertmanager is an optional component that accepts alert notifications from the Loki ruler.
-
 === `components.overridesExporter`
 
 [horizontal]
