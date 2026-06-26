@@ -30,6 +30,8 @@ parameters:
         tag: latest
 
     components:
+      patternIngester:
+        enabled: true
       ruler:
         enabled: true
 

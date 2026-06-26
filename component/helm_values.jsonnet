@@ -50,12 +50,12 @@ local components = com.makeMergeable({
     nodeSelector: std.get(params.components.gateway, 'nodeSelector', globalConfig.nodeSelector),
   } + com.makeMergeable(params.components.gateway),
   // "Optional" components
-  alertmanager: {
-    nodeSelector: std.get(params.components.alertmanager, 'nodeSelector', globalConfig.nodeSelector),
-  } + com.makeMergeable(params.components.alertmanager),
   overridesExporter: {
     nodeSelector: std.get(params.components.overridesExporter, 'nodeSelector', globalConfig.nodeSelector),
   } + com.makeMergeable(params.components.overridesExporter),
+  patternIngester: {
+    nodeSelector: std.get(params.components.patternIngester, 'nodeSelector', globalConfig.nodeSelector),
+  } + com.makeMergeable(params.components.patternIngester),
   ruler: {
     nodeSelector: std.get(params.components.ruler, 'nodeSelector', globalConfig.nodeSelector),
   } + com.makeMergeable(params.components.ruler),

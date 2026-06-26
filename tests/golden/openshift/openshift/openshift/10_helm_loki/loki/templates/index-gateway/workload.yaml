@@ -21,7 +21,7 @@ spec:
   template:
     metadata:
       annotations:
-        checksum/config: 5d8408062873bbd397f104a8639e965387027554a23e8ab4cc739894fc75ceb8
+        checksum/config: 69b70ba23cd5b0710aa0e679bdb6985ad18edbe1bf8fec8fb58d1c80ca7cb0be
         kubectl.kubernetes.io/default-container: index-gateway
       labels:
         app.kubernetes.io/component: index-gateway

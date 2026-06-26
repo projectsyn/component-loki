@@ -24,7 +24,7 @@ spec:
   template:
     metadata:
       annotations:
-        checksum/config: deaa6a87d1aab9442e32ccf19a6b570a0e780f737f386704bbf5fd577a324749
+        checksum/config: 50a4a55c03f81d16280ddcf8f281e7e5493c15736deca0161784fb3f782d8204
         kubectl.kubernetes.io/default-container: distributor
       labels:
         app.kubernetes.io/component: distributor
