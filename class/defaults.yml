@@ -97,6 +97,13 @@ parameters:
         #increase if auth credentials change
         secretVersion: 0
 
+    networkPolicy:
+      enabled: true
+      exposedComponents:
+        - query-frontend
+        - gateway
+      allowedNamespaces: []
+
     ingress:
       enabled: false
       tls:

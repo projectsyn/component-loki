@@ -18,6 +18,11 @@ parameters:
     global:
       retention: 60d
 
+    networkPolicy:
+      ~exposedComponents: []
+      allowedNamespaces:
+        - vshn-grafana
+
     ingress:
       enabled: true
       tls:

@@ -590,6 +590,88 @@ s3:
 Configure access- and secret key for the S3 storage.
 
 
+== `networkPolicy`
+
+Configure the NetworkPolicy if necessary.
+
+=== `networkPolicy.enabled`
+
+[horizontal]
+type:: boolean
+default::
++
+[source,yaml]
+----
+networkPolicy:
+  enabled: true
+----
+
+Enables or disables NetworkPolicy.
+
+[TIP]
+====
+The NetworkPolicy will only be deployed if it is `enabled` and has at least 1 entry in `allowedNamespaces` and `exposedComponents`.
+====
+
+=== `networkPolicy.enabled`
+
+[horizontal]
+type:: boolean
+default:: true
+
+Enable or disable the creation of NetworkPolicies.
+
+=== `networkPolicy.exposedComponents`
+
+[horizontal]
+type:: dict
+default::
++
+[source,yaml]
+----
+networkPolicy:
+  exposedComponents:
+    - query-frontend
+    - gateway
+----
+example::
++
+[source,yaml]
+----
+networkPolicy:
+  exposedComponents:
+    - ~query-frontend
+----
+
+Define what components this NetworkPolicy should allow access to.
+
+The components prefixed with a tilde `~` are removed from the resulting list.
+
+=== `networkPolicy.allowedNamespaces`
+
+[horizontal]
+type:: dict
+default::
++
+[source,yaml]
+----
+networkPolicy:
+  allowedNamespaces: []
+----
+example::
++
+[source,yaml]
+----
+networkPolicy:
+  allowedNamespaces:
+    - vshn-grafana
+----
+
+Define the namespaces that should be able to access this instance.
+
+The namespaces prefixed with a tilde `~` are removed from the resulting list.
+
+
 == `ingress`
 
 Ingress configuration

@@ -41,6 +41,10 @@ parameters:
       endpoint: 's3.example.com'
       region: 'us-east-1'
 
+    networkPolicy:
+      allowedNamespaces:
+        - vshn-grafana
+
     ingress:
       enabled: true
       tls:
