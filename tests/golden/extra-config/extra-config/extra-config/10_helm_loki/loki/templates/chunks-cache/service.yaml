@@ -1,0 +1,26 @@
+apiVersion: v1
+kind: Service
+metadata:
+  annotations: {}
+  labels:
+    app.kubernetes.io/component: memcached-chunks-cache
+    app.kubernetes.io/instance: extra-config
+    app.kubernetes.io/name: loki
+    app.kubernetes.io/version: 3.7.2
+    helm.sh/chart: loki-17.4.11
+  name: extra-config-loki-chunks-cache
+  namespace: extra-config
+spec:
+  clusterIP: None
+  ports:
+    - name: memcached-client
+      port: 11211
+      targetPort: client
+    - name: http-metrics
+      port: 9150
+      targetPort: http-metrics
+  selector:
+    app.kubernetes.io/component: memcached-chunks-cache
+    app.kubernetes.io/instance: extra-config
+    app.kubernetes.io/name: loki
+  type: ClusterIP
