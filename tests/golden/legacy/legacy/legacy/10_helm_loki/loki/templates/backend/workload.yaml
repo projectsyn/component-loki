@@ -5,8 +5,8 @@ metadata:
     app.kubernetes.io/component: backend
     app.kubernetes.io/instance: legacy
     app.kubernetes.io/name: loki
-    app.kubernetes.io/version: 3.7.2
-    helm.sh/chart: loki-17.4.11
+    app.kubernetes.io/version: 3.7.3
+    helm.sh/chart: loki-18.1.1
   name: loki-backend
   namespace: legacy
 spec:
@@ -32,8 +32,8 @@ spec:
         app.kubernetes.io/instance: legacy
         app.kubernetes.io/name: loki
         app.kubernetes.io/part-of: memberlist
-        app.kubernetes.io/version: 3.7.2
-        helm.sh/chart: loki-17.4.11
+        app.kubernetes.io/version: 3.7.3
+        helm.sh/chart: loki-18.1.1
     spec:
       affinity:
         podAntiAffinity:
@@ -64,7 +64,7 @@ spec:
           envFrom:
             - secretRef:
                 name: legacy-bucket-secret
-          image: docker.io/docker.io/grafana/loki:3.7.2
+          image: docker.io/docker.io/grafana/loki:3.7.3
           imagePullPolicy: IfNotPresent
           livenessProbe:
             failureThreshold: 10
@@ -137,7 +137,7 @@ spec:
               value: INFO
             - name: HEALTH_PORT
               value: '8080'
-          image: docker.io/kiwigrid/k8s-sidecar:2.7.4
+          image: docker.io/kiwigrid/k8s-sidecar:2.8.0
           imagePullPolicy: IfNotPresent
           livenessProbe:
             failureThreshold: 3

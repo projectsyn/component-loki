@@ -4,8 +4,8 @@ metadata:
   labels:
     app.kubernetes.io/instance: defaults
     app.kubernetes.io/name: loki
-    app.kubernetes.io/version: 3.7.2
-    helm.sh/chart: loki-17.4.11
+    app.kubernetes.io/version: 3.7.3
+    helm.sh/chart: loki-18.1.1
   name: defaults-loki-clusterrolebinding
 roleRef:
   apiGroup: rbac.authorization.k8s.io
