@@ -472,6 +472,41 @@ global:
 
 Global logs retention.
 
+=== `global.zoneAwareReplication`
+
+[horizontal]
+type:: dict
+default::
++
+[source,yaml]
+----
+global:
+  zoneAwareReplication:
+    enabled: false
+    topologyKey: 'kubernetes.io/hostname'
+----
+example::
++
+[source,yaml]
+----
+global:
+  zoneAwareReplication:
+    enabled: true
+    zones:
+      - name: zone-a
+        nodeSelector:
+          topology.kubernetes.io/zone: 'zone-a'
+      - name: zone-b
+        nodeSelector:
+          topology.kubernetes.io/zone: 'zone-b'
+      - name: zone-c
+        nodeSelector:
+          topology.kubernetes.io/zone: 'zone-c'
+----
+
+Zone-aware replication is the replication of data across failure domains.
+Zone-aware replication helps to avoid data loss during a domain outage. Grafana Loki defines failure domains as zones.
+
 
 == `s3`
 
@@ -555,25 +590,181 @@ s3:
 Configure access- and secret key for the S3 storage.
 
 
-== `secrets`
+== `ingress`
+
+Ingress configuration
+
+=== `ingress.enabled`
+
+[horizontal]
+type:: boolean
+default::
++
+[source,yaml]
+----
+ingress:
+  enabled: false
+----
+
+Enables ingress.
+
+=== `ingress.tls.enabled`
 
 [horizontal]
 type:: dict
-default:: `{}`
+default::
++
+[source,yaml]
+----
+ingress:
+  tls:
+    enabled: true
+----
+
+Enables using TLS for ingress.
+
+=== `ingress.tls.clusterIssuer`
+
+[horizontal]
+type:: dict
+default::
++
+[source,yaml]
+----
+ingress:
+  tls:
+    clusterIssuer: letsencrypt-production
+----
+
+Configures the annotation for the cert-manager `ClusterIssuer`, this component assumes cert-manager is installed.
+
+=== `ingress.tls.key` and `ingress.tls.cert`
+
+[horizontal]
+type:: dict
+default::
++
+[source,yaml]
+----
+ingress:
+  tls:
+    key: null
+    cert: null
+----
+default::
++
+[source,yaml]
+----
+ingress:
+  tls:
+    clusterIssuer: null
+    key: |
+      -----BEGIN PRIVATE KEY-----
+      ...
+      -----END PRIVATE KEY-----
+    cert: |
+      -----BEGIN CERTIFICATE-----
+      ...
+      -----END CERTIFICATE-----
+----
+
+Configures private key and certificate for TLS.
+The secret will automatically be created.
+
+[TIP]
+====
+This requires `ingress.tls.clusterIssuer` to be null.
+If both are enabled, `ingress.tls.clusterIssuer` takes precedence.
+====
+
+=== `ingress.url`
+
+[horizontal]
+type:: dict
+default::
++
+[source,yaml]
+----
+ingress:
+  url: ''
+----
+
+The URL for witch the ingress is configured.
+
+=== `ingress.annotations` and `ingress.labels`
+
+[horizontal]
+type:: dict
+default::
++
+[source,yaml]
+----
+ingress:
+  annotations: {}
+  labels: {}
+----
 example::
 +
 [source,yaml]
 ----
-secrets:
-  loki-bucket-secret:
-    stringData:
-      S3_ACCESS_KEY_ID: null
-      S3_SECRET_ACCESS_KEY: null
-      S3_ENDPOINT: null
+ingress:
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-staging
 ----
 
-A dict of secrets to create in the namespace. The key is the name of the secret, the value is the content of the secret.
-The value must be a dict with a key `stringData` which is a dict of key/value pairs to add to the secret.
+Add custom annotations and labels.
+
+
+== `basicAuth`
+
+Configures basic authentication for nginx.
+
+=== `basicAuth.enabled`
+
+[horizontal]
+type:: boolean
+default::
++
+[source,yaml]
+----
+basicAuth:
+  enabled: false
+----
+
+Enables basic authentication for nginx.
+
+=== `basicAuth.htpasswd`
+
+[horizontal]
+type:: boolean
+default::
++
+[source,yaml]
+----
+basicAuth:
+  htpasswd: '?{vaultkv:${cluster:tenant}/${cluster:name}/${_instance}/htpasswd}'
+----
+
+The content of the `.htpasswd` file.
+
+[TIP]
+====
+If you set the `basicAuth.htpasswd: null`, you can use the `basicAuth.existingSecret` to inlcude an existing secret.
+====
+
+
+== `monitoring`
+
+[horizontal]
+type:: dict
+default::
++
+[source,yaml]
+----
+monitoring: true
+----
+
+Enable the service monitors, rules, and alerts from the Helm chart.
 
 
 == `alerts`
@@ -621,7 +812,7 @@ All rules defined in this parameter will be added to rule group `loki-custom.rul
 
 [horizontal]
 type:: dict
-default:: https://github.com/projectsyn/component-mimir/blob/master/class/defaults.yml[See `class/defaults.yml`]
+default:: https://github.com/projectsyn/component-loki/blob/master/class/defaults.yml[See `class/defaults.yml`]
 example::
 +
 [source,yaml]
@@ -642,6 +833,28 @@ The keys in the `patches` parameter correspond to the field `alert` of the alert
 The component expects valid partial Prometheus alert rule objects as values.
 
 IMPORTANT: The provided values aren't validated, they're applied to the corresponding upstream alert as-is.
+
+
+
+== `secrets`
+
+[horizontal]
+type:: dict
+default:: `{}`
+example::
++
+[source,yaml]
+----
+secrets:
+  loki-bucket-secret:
+    stringData:
+      S3_ACCESS_KEY_ID: null
+      S3_SECRET_ACCESS_KEY: null
+      S3_ENDPOINT: null
+----
+
+A dict of secrets to create in the namespace. The key is the name of the secret, the value is the content of the secret.
+The value must be a dict with a key `stringData` which is a dict of key/value pairs to add to the secret.
 
 
 == `helm_values`

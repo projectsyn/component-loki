@@ -10,7 +10,12 @@ local hasRolloutOperator = std.member(inv.applications, 'rollout-operator');
 // Global Params and Zone Aware Replication
 local globalConfig = params.global + com.makeMergeable({
   nodeSelector: std.get(params, 'globalNodeSelector', params.global.nodeSelector),
-  zoneAwareReplication: if hasRolloutOperator then params.global.zoneAwareReplication else std.trace('rollout-operator must be installed', {}),
+  zoneAwareReplication: params.global.zoneAwareReplication {
+    enabled: if params.global.zoneAwareReplication.enabled then
+      // Assert that zone aware replication is only enabled if rollout-operator is installed
+      if hasRolloutOperator then true else error 'rollout-operator must be installed for zone-aware replication'
+    else false,
+  },
 });
 
 local components = com.makeMergeable({
@@ -85,6 +90,39 @@ local openshift = if isOpenshift then com.makeMergeable({
     dnsService: 'dns-default',
     dnsNamespace: 'openshift-dns',
   },
+  loki: {
+    podSecurityContext: {
+      fsGroup: null,
+      runAsGroup: null,
+      runAsNonRoot: true,
+      runAsUser: null,
+    },
+  },
+  gateway: {
+    podSecurityContext: {
+      fsGroup: null,
+      runAsGroup: null,
+      runAsNonRoot: true,
+      runAsUser: null,
+    },
+    metrics: {
+      containerSecurityContext: {
+        privileged: null,
+        runAsGroup: null,
+        runAsNonRoot: null,
+        runAsUser: null,
+      },
+    },
+  },
+  rbac: {
+    sccEnabled: false,
+  },
+  memcached: {
+    podSecurityContext: null,
+  },
+  lokiCanary: {
+    podSecurityContext: null,
+  },
 }) else {};
 
 local images = com.makeMergeable({
@@ -129,6 +167,14 @@ local global = com.makeMergeable({
     extraEnvFrom: [ { secretRef: { name: '%s-bucket-secret' % inv.parameters._instance } } ],
     podAnnotations: {
       bucketSecretVersion: '%s' % params.s3.auth.secretVersion,
+    },
+  },
+  [if params.monitoring then 'monitoring']: {
+    serviceMonitor: {
+      enabled: params.monitoring,
+    },
+    rules: {
+      enabled: params.monitoring,
     },
   },
   lokiCanary: {
@@ -188,6 +234,33 @@ local loki = com.makeMergeable({
 
 // Loki Config
 local ingress = com.makeMergeable({
+  [if params.components.gateway.enabled then 'gateway']: {
+    ingress: {
+      enabled: params.ingress.enabled,
+      [if params.ingress.tls.enabled && params.ingress.tls.clusterIssuer != null then 'annotations']: {
+        'cert-manager.io/cluster-issuer': params.ingress.tls.clusterIssuer,
+      } + if std.objectHas(params.ingress, 'annotations') then com.makeMergeable(params.ingress.annotations) else {},
+      [if std.objectHas(params.ingress, 'labels') then 'labels']: params.ingress.labels,
+      hosts: [ {
+        host: params.ingress.url,
+        paths: [
+          {
+            path: '/',
+            pathType: 'Prefix',
+          },
+        ],
+      } ],
+      [if params.ingress.tls.enabled then 'tls']: [ {
+        hosts: [ params.ingress.url ],
+        secretName: '%s-tls' % std.strReplace(params.ingress.url, '.', '-'),
+      } ],
+    },
+    basicAuth: {
+      enabled: params.basicAuth.enabled,
+      [if params.basicAuth.htpasswd != null && !std.objectHas(params.basicAuth, 'existingSecret') then 'existingSecret']: '%s-nginx-htpasswd' % inv.parameters._instance,
+      [if std.objectHas(params.basicAuth, 'existingSecret') then 'existingSecret']: params.basicAuth.existingSecret,
+    },
+  },
 });
 
 // hardcoded removal of rollout-operator
@@ -199,6 +272,11 @@ local hardRestrictions = com.makeMergeable({
     enabled: false,
   },
   [if !std.member([ 'none', 'legacy' ], params.preset) then 'deploymentMode']: 'Distributed',
+  ingester: {
+    zoneAwareReplication: {
+      enabled: if hasRolloutOperator && params.global.zoneAwareReplication.enabled then true else false,
+    },
+  },
 });
 
 {

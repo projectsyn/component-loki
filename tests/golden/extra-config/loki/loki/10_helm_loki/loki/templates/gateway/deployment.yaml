@@ -22,7 +22,7 @@ spec:
   template:
     metadata:
       annotations:
-        checksum/config: d983d4b135c64732f88dea989ad8aa77d312f04b272722a7fea4a9f3368128c2
+        checksum/config: 80874b01148f6cd5d1c5bf3d13ab031467eb027853c112bc14ac1ab8cd5be797
       labels:
         app.kubernetes.io/component: gateway
         app.kubernetes.io/instance: loki
@@ -63,6 +63,8 @@ spec:
           volumeMounts:
             - mountPath: /etc/nginx
               name: config
+            - mountPath: /etc/nginx/secrets
+              name: auth
             - mountPath: /tmp
               name: tmp
             - mountPath: /docker-entrypoint.d
@@ -129,6 +131,9 @@ spec:
         - configMap:
             name: loki-gateway
           name: config
+        - name: auth
+          secret:
+            secretName: loki-nginx-htpasswd
         - emptyDir: {}
           name: tmp
         - emptyDir: {}
