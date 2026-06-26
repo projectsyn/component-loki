@@ -128,19 +128,22 @@ local openshift = if isOpenshift then com.makeMergeable({
 local images = com.makeMergeable({
   loki: {
     image: {
-      repository: '%(registry)s/%(repository)s' % params.images.loki,
+      registry: params.images.loki.registry,
+      repository: params.images.loki.repository,
       [if std.objectHas(params.images.loki, 'tag') then 'tag']: params.images.loki.tag,
     },
   },
   memcached: {
     image: {
-      repository: '%(registry)s/%(repository)s' % params.images.memcached,
+      registry: params.images.memcached.registry,
+      repository: params.images.memcached.repository,
       [if std.objectHas(params.images.memcached, 'tag') then 'tag']: params.images.memcached.tag,
     },
   },
   memcachedExporter: {
     image: {
-      repository: '%(registry)s/%(repository)s' % params.images.memcachedExporter,
+      registry: params.images.memcachedExporter.registry,
+      repository: params.images.memcachedExporter.repository,
       [if std.objectHas(params.images.memcachedExporter, 'tag') then 'tag']: params.images.memcachedExporter.tag,
     },
   },

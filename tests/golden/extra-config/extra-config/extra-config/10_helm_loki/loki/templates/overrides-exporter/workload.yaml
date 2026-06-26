@@ -58,7 +58,7 @@ spec:
           envFrom:
             - secretRef:
                 name: extra-config-bucket-secret
-          image: docker.io/dockerhub.vshn.net/grafana/loki:3.7.3
+          image: dockerhub.vshn.net/grafana/loki:3.7.3
           imagePullPolicy: IfNotPresent
           livenessProbe:
             failureThreshold: 10
