@@ -7,7 +7,7 @@ metadata:
     app.kubernetes.io/instance: openshift
     app.kubernetes.io/name: loki
     app.kubernetes.io/version: 3.7.3
-    helm.sh/chart: loki-18.1.1
+    helm.sh/chart: loki-18.5.1
     name: memcached-results-cache
   name: openshift-loki-results-cache
   namespace: openshift
@@ -44,7 +44,7 @@ spec:
           envFrom:
             - secretRef:
                 name: openshift-bucket-secret
-          image: docker.io/library/memcached:1.6.42-alpine
+          image: docker.io/library/memcached:1.6.45-alpine
           imagePullPolicy: IfNotPresent
           livenessProbe:
             failureThreshold: 3

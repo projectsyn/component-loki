@@ -7,9 +7,8 @@ metadata:
     app.kubernetes.io/component: ingester
     app.kubernetes.io/instance: extra-config
     app.kubernetes.io/name: loki
-    app.kubernetes.io/part-of: memberlist
     app.kubernetes.io/version: 3.7.3
-    helm.sh/chart: loki-18.1.1
+    helm.sh/chart: loki-18.5.1
     name: ingester-zone-a
     rollout-group: ingester
   name: extra-config-loki-ingester-zone-a
@@ -37,7 +36,7 @@ spec:
         app.kubernetes.io/name: loki
         app.kubernetes.io/part-of: memberlist
         app.kubernetes.io/version: 3.7.3
-        helm.sh/chart: loki-18.1.1
+        helm.sh/chart: loki-18.5.1
         name: ingester-zone-a
         rollout-group: ingester
     spec:
@@ -176,9 +175,8 @@ metadata:
     app.kubernetes.io/component: ingester
     app.kubernetes.io/instance: extra-config
     app.kubernetes.io/name: loki
-    app.kubernetes.io/part-of: memberlist
     app.kubernetes.io/version: 3.7.3
-    helm.sh/chart: loki-18.1.1
+    helm.sh/chart: loki-18.5.1
     name: ingester-zone-b
     rollout-group: ingester
   name: extra-config-loki-ingester-zone-b
@@ -206,7 +204,7 @@ spec:
         app.kubernetes.io/name: loki
         app.kubernetes.io/part-of: memberlist
         app.kubernetes.io/version: 3.7.3
-        helm.sh/chart: loki-18.1.1
+        helm.sh/chart: loki-18.5.1
         name: ingester-zone-b
         rollout-group: ingester
     spec:
@@ -345,9 +343,8 @@ metadata:
     app.kubernetes.io/component: ingester
     app.kubernetes.io/instance: extra-config
     app.kubernetes.io/name: loki
-    app.kubernetes.io/part-of: memberlist
     app.kubernetes.io/version: 3.7.3
-    helm.sh/chart: loki-18.1.1
+    helm.sh/chart: loki-18.5.1
     name: ingester-zone-c
     rollout-group: ingester
   name: extra-config-loki-ingester-zone-c
@@ -375,7 +372,7 @@ spec:
         app.kubernetes.io/name: loki
         app.kubernetes.io/part-of: memberlist
         app.kubernetes.io/version: 3.7.3
-        helm.sh/chart: loki-18.1.1
+        helm.sh/chart: loki-18.5.1
         name: ingester-zone-c
         rollout-group: ingester
     spec:
