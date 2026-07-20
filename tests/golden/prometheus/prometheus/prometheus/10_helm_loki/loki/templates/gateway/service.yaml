@@ -7,7 +7,7 @@ metadata:
     app.kubernetes.io/instance: prometheus
     app.kubernetes.io/name: loki
     app.kubernetes.io/version: 3.7.3
-    helm.sh/chart: loki-18.1.1
+    helm.sh/chart: loki-18.5.1
     prometheus.io/service-monitor: 'false'
   name: prometheus-loki-gateway
   namespace: prometheus

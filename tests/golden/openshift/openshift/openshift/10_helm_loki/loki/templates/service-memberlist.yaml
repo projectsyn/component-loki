@@ -6,7 +6,7 @@ metadata:
     app.kubernetes.io/instance: openshift
     app.kubernetes.io/name: loki
     app.kubernetes.io/version: 3.7.3
-    helm.sh/chart: loki-18.1.1
+    helm.sh/chart: loki-18.5.1
   name: openshift-loki-memberlist
   namespace: openshift
 spec:
