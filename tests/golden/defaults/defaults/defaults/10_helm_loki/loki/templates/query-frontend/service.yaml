@@ -6,8 +6,8 @@ metadata:
     app.kubernetes.io/component: query-frontend
     app.kubernetes.io/instance: defaults
     app.kubernetes.io/name: loki
-    app.kubernetes.io/version: 3.7.3
-    helm.sh/chart: loki-18.5.1
+    app.kubernetes.io/version: 3.7.4
+    helm.sh/chart: loki-18.5.2
   name: defaults-loki-query-frontend
   namespace: defaults
 spec:
@@ -39,8 +39,8 @@ metadata:
     app.kubernetes.io/component: query-frontend
     app.kubernetes.io/instance: defaults
     app.kubernetes.io/name: loki
-    app.kubernetes.io/version: 3.7.3
-    helm.sh/chart: loki-18.5.1
+    app.kubernetes.io/version: 3.7.4
+    helm.sh/chart: loki-18.5.2
     prometheus.io/service-monitor: 'false'
     variant: headless
   name: defaults-loki-query-frontend-headless

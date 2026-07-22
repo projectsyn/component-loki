@@ -6,8 +6,8 @@ metadata:
     app.kubernetes.io/component: gateway
     app.kubernetes.io/instance: openshift
     app.kubernetes.io/name: loki
-    app.kubernetes.io/version: 3.7.3
-    helm.sh/chart: loki-18.5.1
+    app.kubernetes.io/version: 3.7.4
+    helm.sh/chart: loki-18.5.2
     prometheus.io/service-monitor: 'false'
   name: openshift-loki-gateway
   namespace: openshift
