@@ -5,8 +5,8 @@ metadata:
     app.kubernetes.io/component: compactor
     app.kubernetes.io/instance: defaults
     app.kubernetes.io/name: loki
-    app.kubernetes.io/version: 3.7.3
-    helm.sh/chart: loki-18.5.1
+    app.kubernetes.io/version: 3.7.4
+    helm.sh/chart: loki-18.5.2
   name: defaults-loki-compactor
   namespace: defaults
 spec:
@@ -29,8 +29,8 @@ spec:
         app.kubernetes.io/instance: defaults
         app.kubernetes.io/name: loki
         app.kubernetes.io/part-of: memberlist
-        app.kubernetes.io/version: 3.7.3
-        helm.sh/chart: loki-18.5.1
+        app.kubernetes.io/version: 3.7.4
+        helm.sh/chart: loki-18.5.2
     spec:
       affinity:
         podAntiAffinity:
@@ -60,7 +60,7 @@ spec:
           envFrom:
             - secretRef:
                 name: defaults-bucket-secret
-          image: docker.io/grafana/loki:3.7.3
+          image: docker.io/grafana/loki:3.7.4
           imagePullPolicy: IfNotPresent
           livenessProbe:
             failureThreshold: 10
