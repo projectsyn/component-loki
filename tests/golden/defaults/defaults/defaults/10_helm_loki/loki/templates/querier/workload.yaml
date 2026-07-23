@@ -6,7 +6,7 @@ metadata:
     app.kubernetes.io/instance: defaults
     app.kubernetes.io/name: loki
     app.kubernetes.io/version: 3.7.4
-    helm.sh/chart: loki-18.5.2
+    helm.sh/chart: loki-18.5.3
   name: defaults-loki-querier
   namespace: defaults
 spec:
@@ -33,7 +33,7 @@ spec:
         app.kubernetes.io/name: loki
         app.kubernetes.io/part-of: memberlist
         app.kubernetes.io/version: 3.7.4
-        helm.sh/chart: loki-18.5.2
+        helm.sh/chart: loki-18.5.3
     spec:
       affinity:
         podAntiAffinity:

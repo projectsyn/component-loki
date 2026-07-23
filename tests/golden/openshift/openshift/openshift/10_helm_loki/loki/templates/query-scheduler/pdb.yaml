@@ -6,7 +6,7 @@ metadata:
     app.kubernetes.io/instance: openshift
     app.kubernetes.io/name: loki
     app.kubernetes.io/version: 3.7.4
-    helm.sh/chart: loki-18.5.2
+    helm.sh/chart: loki-18.5.3
   name: openshift-loki-query-scheduler
   namespace: openshift
 spec:
