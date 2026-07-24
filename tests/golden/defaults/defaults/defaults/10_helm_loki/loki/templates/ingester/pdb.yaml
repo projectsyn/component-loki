@@ -6,7 +6,7 @@ metadata:
     app.kubernetes.io/instance: defaults
     app.kubernetes.io/name: loki
     app.kubernetes.io/version: 3.7.4
-    helm.sh/chart: loki-18.5.3
+    helm.sh/chart: loki-18.5.4
   name: defaults-loki-ingester
   namespace: defaults
 spec:
