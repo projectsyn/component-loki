@@ -7,7 +7,7 @@ metadata:
     app.kubernetes.io/instance: extra-config
     app.kubernetes.io/name: loki
     app.kubernetes.io/version: 3.7.4
-    helm.sh/chart: loki-18.5.2
+    helm.sh/chart: loki-18.5.3
   name: extra-config-loki-ingester
   namespace: extra-config
 spec:
@@ -40,7 +40,7 @@ metadata:
     app.kubernetes.io/instance: extra-config
     app.kubernetes.io/name: loki
     app.kubernetes.io/version: 3.7.4
-    helm.sh/chart: loki-18.5.2
+    helm.sh/chart: loki-18.5.3
     prometheus.io/service-monitor: 'false'
     variant: headless
   name: extra-config-loki-ingester-headless
@@ -77,7 +77,7 @@ metadata:
     app.kubernetes.io/instance: extra-config
     app.kubernetes.io/name: loki
     app.kubernetes.io/version: 3.7.4
-    helm.sh/chart: loki-18.5.2
+    helm.sh/chart: loki-18.5.3
     prometheus.io/service-monitor: 'false'
     variant: headless
   name: extra-config-loki-ingester-zone-a-headless
@@ -115,7 +115,7 @@ metadata:
     app.kubernetes.io/instance: extra-config
     app.kubernetes.io/name: loki
     app.kubernetes.io/version: 3.7.4
-    helm.sh/chart: loki-18.5.2
+    helm.sh/chart: loki-18.5.3
     prometheus.io/service-monitor: 'false'
     variant: headless
   name: extra-config-loki-ingester-zone-b-headless
@@ -153,7 +153,7 @@ metadata:
     app.kubernetes.io/instance: extra-config
     app.kubernetes.io/name: loki
     app.kubernetes.io/version: 3.7.4
-    helm.sh/chart: loki-18.5.2
+    helm.sh/chart: loki-18.5.3
     prometheus.io/service-monitor: 'false'
     variant: headless
   name: extra-config-loki-ingester-zone-c-headless
