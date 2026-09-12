@@ -7,8 +7,8 @@ metadata:
     app.kubernetes.io/component: ingester
     app.kubernetes.io/instance: extra-config
     app.kubernetes.io/name: loki
-    app.kubernetes.io/version: 3.7.4
-    helm.sh/chart: loki-18.5.4
+    app.kubernetes.io/version: 3.7.7
+    helm.sh/chart: loki-18.13.0
     name: ingester-zone-a
     rollout-group: ingester
   name: extra-config-loki-ingester-zone-a
@@ -35,8 +35,8 @@ spec:
         app.kubernetes.io/instance: extra-config
         app.kubernetes.io/name: loki
         app.kubernetes.io/part-of: memberlist
-        app.kubernetes.io/version: 3.7.4
-        helm.sh/chart: loki-18.5.4
+        app.kubernetes.io/version: 3.7.7
+        helm.sh/chart: loki-18.13.0
         name: ingester-zone-a
         rollout-group: ingester
     spec:
@@ -76,7 +76,7 @@ spec:
           envFrom:
             - secretRef:
                 name: extra-config-bucket-secret
-          image: dockerhub.vshn.net/grafana/loki:3.7.4
+          image: dockerhub.vshn.net/grafana/loki:3.7.7
           imagePullPolicy: IfNotPresent
           livenessProbe:
             failureThreshold: 10
@@ -175,8 +175,8 @@ metadata:
     app.kubernetes.io/component: ingester
     app.kubernetes.io/instance: extra-config
     app.kubernetes.io/name: loki
-    app.kubernetes.io/version: 3.7.4
-    helm.sh/chart: loki-18.5.4
+    app.kubernetes.io/version: 3.7.7
+    helm.sh/chart: loki-18.13.0
     name: ingester-zone-b
     rollout-group: ingester
   name: extra-config-loki-ingester-zone-b
@@ -203,8 +203,8 @@ spec:
         app.kubernetes.io/instance: extra-config
         app.kubernetes.io/name: loki
         app.kubernetes.io/part-of: memberlist
-        app.kubernetes.io/version: 3.7.4
-        helm.sh/chart: loki-18.5.4
+        app.kubernetes.io/version: 3.7.7
+        helm.sh/chart: loki-18.13.0
         name: ingester-zone-b
         rollout-group: ingester
     spec:
@@ -244,7 +244,7 @@ spec:
           envFrom:
             - secretRef:
                 name: extra-config-bucket-secret
-          image: dockerhub.vshn.net/grafana/loki:3.7.4
+          image: dockerhub.vshn.net/grafana/loki:3.7.7
           imagePullPolicy: IfNotPresent
           livenessProbe:
             failureThreshold: 10
@@ -343,8 +343,8 @@ metadata:
     app.kubernetes.io/component: ingester
     app.kubernetes.io/instance: extra-config
     app.kubernetes.io/name: loki
-    app.kubernetes.io/version: 3.7.4
-    helm.sh/chart: loki-18.5.4
+    app.kubernetes.io/version: 3.7.7
+    helm.sh/chart: loki-18.13.0
     name: ingester-zone-c
     rollout-group: ingester
   name: extra-config-loki-ingester-zone-c
@@ -371,8 +371,8 @@ spec:
         app.kubernetes.io/instance: extra-config
         app.kubernetes.io/name: loki
         app.kubernetes.io/part-of: memberlist
-        app.kubernetes.io/version: 3.7.4
-        helm.sh/chart: loki-18.5.4
+        app.kubernetes.io/version: 3.7.7
+        helm.sh/chart: loki-18.13.0
         name: ingester-zone-c
         rollout-group: ingester
     spec:
@@ -412,7 +412,7 @@ spec:
           envFrom:
             - secretRef:
                 name: extra-config-bucket-secret
-          image: dockerhub.vshn.net/grafana/loki:3.7.4
+          image: dockerhub.vshn.net/grafana/loki:3.7.7
           imagePullPolicy: IfNotPresent
           livenessProbe:
             failureThreshold: 10
