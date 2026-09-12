@@ -6,8 +6,8 @@ metadata:
     app.kubernetes.io/component: memcached-chunks-cache
     app.kubernetes.io/instance: legacy
     app.kubernetes.io/name: loki
-    app.kubernetes.io/version: 3.7.4
-    helm.sh/chart: loki-18.5.4
+    app.kubernetes.io/version: 3.7.7
+    helm.sh/chart: loki-18.13.0
   name: legacy-loki-chunks-cache
   namespace: legacy
 spec:
