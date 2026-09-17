@@ -6,8 +6,8 @@ metadata:
     app.kubernetes.io/component: ingester
     app.kubernetes.io/instance: defaults
     app.kubernetes.io/name: loki
-    app.kubernetes.io/version: 3.7.4
-    helm.sh/chart: loki-18.5.4
+    app.kubernetes.io/version: 3.7.8
+    helm.sh/chart: loki-18.13.3
   name: defaults-loki-ingester
   namespace: defaults
 spec:
@@ -39,8 +39,8 @@ metadata:
     app.kubernetes.io/component: ingester
     app.kubernetes.io/instance: defaults
     app.kubernetes.io/name: loki
-    app.kubernetes.io/version: 3.7.4
-    helm.sh/chart: loki-18.5.4
+    app.kubernetes.io/version: 3.7.8
+    helm.sh/chart: loki-18.13.3
     prometheus.io/service-monitor: 'false'
     variant: headless
   name: defaults-loki-ingester-headless

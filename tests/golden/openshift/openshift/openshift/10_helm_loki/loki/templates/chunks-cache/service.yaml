@@ -6,8 +6,8 @@ metadata:
     app.kubernetes.io/component: memcached-chunks-cache
     app.kubernetes.io/instance: openshift
     app.kubernetes.io/name: loki
-    app.kubernetes.io/version: 3.7.4
-    helm.sh/chart: loki-18.5.4
+    app.kubernetes.io/version: 3.7.8
+    helm.sh/chart: loki-18.13.3
   name: openshift-loki-chunks-cache
   namespace: openshift
 spec:
