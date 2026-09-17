@@ -5,6 +5,8 @@ metadata:
     app.kubernetes.io/component: memcached-results-cache
     app.kubernetes.io/instance: prometheus
     app.kubernetes.io/name: loki
+    app.kubernetes.io/version: 3.7.8
+    helm.sh/chart: loki-18.13.3
   name: prometheus-loki-results-cache
   namespace: prometheus
 spec:
