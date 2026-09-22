@@ -5,8 +5,8 @@ metadata:
     app.kubernetes.io/component: gateway
     app.kubernetes.io/instance: openshift
     app.kubernetes.io/name: loki
-    app.kubernetes.io/version: 3.7.4
-    helm.sh/chart: loki-18.5.4
+    app.kubernetes.io/version: 3.7.8
+    helm.sh/chart: loki-18.13.5
   name: openshift-loki-gateway
   namespace: openshift
 spec:
@@ -22,7 +22,7 @@ spec:
   template:
     metadata:
       annotations:
-        checksum/config: 0ebef6b14e99d83bac4cca76683b535f2665f12b43c304aa976a8bc51efb8ae4
+        checksum/config: 3b0fdafd822e1811d67a7e72892963de85fb73ebe687944d0fc27baac3c46b36
       labels:
         app.kubernetes.io/component: gateway
         app.kubernetes.io/instance: openshift
@@ -74,7 +74,7 @@ spec:
             - http://127.0.0.1:8080/stub_status
             - --preset
             - loki
-          image: ghcr.io/jkroepke/access-log-exporter:0.4.8
+          image: ghcr.io/jkroepke/access-log-exporter:0.4.13
           imagePullPolicy: IfNotPresent
           livenessProbe:
             failureThreshold: 3

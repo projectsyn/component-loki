@@ -5,8 +5,8 @@ metadata:
     app.kubernetes.io/component: gateway
     app.kubernetes.io/instance: prometheus
     app.kubernetes.io/name: loki
-    app.kubernetes.io/version: 3.7.4
-    helm.sh/chart: loki-18.5.4
+    app.kubernetes.io/version: 3.7.8
+    helm.sh/chart: loki-18.13.5
   name: prometheus-loki-gateway
   namespace: prometheus
 spec:
@@ -22,7 +22,7 @@ spec:
   template:
     metadata:
       annotations:
-        checksum/config: b4214835af6e0a0bd71f9c1ca89bb401473522575693ed543fbc4f55d6b6f56d
+        checksum/config: c337224786031164817a327da009fc6a0c2419c661980452671f0e30c53c9d9b
       labels:
         app.kubernetes.io/component: gateway
         app.kubernetes.io/instance: prometheus
@@ -72,7 +72,7 @@ spec:
             - http://127.0.0.1:8080/stub_status
             - --preset
             - loki
-          image: ghcr.io/jkroepke/access-log-exporter:0.4.8
+          image: ghcr.io/jkroepke/access-log-exporter:0.4.13
           imagePullPolicy: IfNotPresent
           livenessProbe:
             failureThreshold: 3
