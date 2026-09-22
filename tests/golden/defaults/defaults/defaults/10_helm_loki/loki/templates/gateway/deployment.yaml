@@ -5,8 +5,8 @@ metadata:
     app.kubernetes.io/component: gateway
     app.kubernetes.io/instance: defaults
     app.kubernetes.io/name: loki
-    app.kubernetes.io/version: 3.7.4
-    helm.sh/chart: loki-18.5.4
+    app.kubernetes.io/version: 3.7.8
+    helm.sh/chart: loki-18.13.5
   name: defaults-loki-gateway
   namespace: defaults
 spec:
@@ -22,7 +22,7 @@ spec:
   template:
     metadata:
       annotations:
-        checksum/config: b5a9bab97896fd78c11a9ea9263bd757d47c2e6d49d83ae6de1d205fbb0cfd95
+        checksum/config: 73da490a2ea6508b10c50b282421497d962df1b6051635fcbee0a552e5fe682b
       labels:
         app.kubernetes.io/component: gateway
         app.kubernetes.io/instance: defaults
@@ -72,7 +72,7 @@ spec:
             - http://127.0.0.1:8080/stub_status
             - --preset
             - loki
-          image: ghcr.io/jkroepke/access-log-exporter:0.4.8
+          image: ghcr.io/jkroepke/access-log-exporter:0.4.13
           imagePullPolicy: IfNotPresent
           livenessProbe:
             failureThreshold: 3

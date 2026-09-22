@@ -5,8 +5,8 @@ metadata:
     app.kubernetes.io/component: gateway
     app.kubernetes.io/instance: extra-config
     app.kubernetes.io/name: loki
-    app.kubernetes.io/version: 3.7.4
-    helm.sh/chart: loki-18.5.4
+    app.kubernetes.io/version: 3.7.8
+    helm.sh/chart: loki-18.13.5
   name: extra-config-loki-gateway
   namespace: extra-config
 spec:
@@ -22,7 +22,7 @@ spec:
   template:
     metadata:
       annotations:
-        checksum/config: c033b3221c75fb9b6adfe9719712f9b6a3d92aed6568b4115eb36c3aaf691395
+        checksum/config: b38580301594fedaee2c2c60e8e0ef08459d8c441ab2e6589f6914744f2d5405
       labels:
         app.kubernetes.io/component: gateway
         app.kubernetes.io/instance: extra-config
