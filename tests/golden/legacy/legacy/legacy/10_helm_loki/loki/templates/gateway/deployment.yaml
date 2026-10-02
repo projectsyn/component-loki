@@ -22,7 +22,7 @@ spec:
   template:
     metadata:
       annotations:
-        checksum/config: c4d6e784251df14cc0030fb879b89e13f22af4961a5fde94e662af9d7a51419b
+        checksum/config: a58a96ad62c673d3fa0143544e2c7ab8d5cecd30b357caf3b9df3fc599abf6d2
       labels:
         app.kubernetes.io/component: gateway
         app.kubernetes.io/instance: legacy
@@ -104,11 +104,7 @@ spec:
             capabilities:
               drop:
                 - ALL
-            privileged: false
             readOnlyRootFilesystem: true
-            runAsGroup: 65532
-            runAsNonRoot: true
-            runAsUser: 65532
             seccompProfile:
               type: RuntimeDefault
           volumeMounts:
@@ -119,10 +115,7 @@ spec:
       nodeSelector:
         appuio.io/node-class: plus
       securityContext:
-        fsGroup: 101
-        runAsGroup: 101
         runAsNonRoot: true
-        runAsUser: 101
         seccompProfile:
           type: RuntimeDefault
       serviceAccountName: legacy-loki-gateway

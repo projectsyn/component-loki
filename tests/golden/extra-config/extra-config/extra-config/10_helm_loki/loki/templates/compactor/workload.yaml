@@ -115,11 +115,8 @@ spec:
               name: temp
       enableServiceLinks: true
       securityContext:
-        fsGroup: 10001
         fsGroupChangePolicy: OnRootMismatch
-        runAsGroup: 10001
         runAsNonRoot: true
-        runAsUser: 10001
         seccompProfile:
           type: RuntimeDefault
       serviceAccountName: extra-config-loki

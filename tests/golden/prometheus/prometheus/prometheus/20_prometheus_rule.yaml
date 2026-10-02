@@ -1,7 +1,6 @@
 apiVersion: monitoring.coreos.com/v1
 kind: PrometheusRule
 metadata:
-  annotations: {}
   labels:
     monitoring.syn.tools/enabled: 'true'
     name: loki-custom
@@ -18,3 +17,5 @@ spec:
           for: 5m
           labels:
             severity: warning
+            syn: 'true'
+            syn_component: prometheus
