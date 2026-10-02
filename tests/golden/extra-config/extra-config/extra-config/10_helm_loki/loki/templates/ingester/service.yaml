@@ -6,8 +6,8 @@ metadata:
     app.kubernetes.io/component: ingester
     app.kubernetes.io/instance: extra-config
     app.kubernetes.io/name: loki
-    app.kubernetes.io/version: 3.7.4
-    helm.sh/chart: loki-18.5.4
+    app.kubernetes.io/version: 3.7.8
+    helm.sh/chart: loki-18.13.7
   name: extra-config-loki-ingester
   namespace: extra-config
 spec:
@@ -39,8 +39,8 @@ metadata:
     app.kubernetes.io/component: ingester
     app.kubernetes.io/instance: extra-config
     app.kubernetes.io/name: loki
-    app.kubernetes.io/version: 3.7.4
-    helm.sh/chart: loki-18.5.4
+    app.kubernetes.io/version: 3.7.8
+    helm.sh/chart: loki-18.13.7
     prometheus.io/service-monitor: 'false'
     variant: headless
   name: extra-config-loki-ingester-headless
@@ -66,6 +66,7 @@ spec:
     app.kubernetes.io/instance: extra-config
     app.kubernetes.io/name: loki
   type: ClusterIP
+--- null
 ---
 apiVersion: v1
 kind: Service
@@ -75,8 +76,8 @@ metadata:
     app.kubernetes.io/component: ingester
     app.kubernetes.io/instance: extra-config
     app.kubernetes.io/name: loki
-    app.kubernetes.io/version: 3.7.4
-    helm.sh/chart: loki-18.5.4
+    app.kubernetes.io/version: 3.7.8
+    helm.sh/chart: loki-18.13.7
     prometheus.io/service-monitor: 'false'
     variant: headless
   name: extra-config-loki-ingester-zone-a-headless
@@ -103,6 +104,7 @@ spec:
     name: ingester-zone-a
     rollout-group: ingester
   type: ClusterIP
+--- null
 ---
 apiVersion: v1
 kind: Service
@@ -112,8 +114,8 @@ metadata:
     app.kubernetes.io/component: ingester
     app.kubernetes.io/instance: extra-config
     app.kubernetes.io/name: loki
-    app.kubernetes.io/version: 3.7.4
-    helm.sh/chart: loki-18.5.4
+    app.kubernetes.io/version: 3.7.8
+    helm.sh/chart: loki-18.13.7
     prometheus.io/service-monitor: 'false'
     variant: headless
   name: extra-config-loki-ingester-zone-b-headless
@@ -140,6 +142,7 @@ spec:
     name: ingester-zone-b
     rollout-group: ingester
   type: ClusterIP
+--- null
 ---
 apiVersion: v1
 kind: Service
@@ -149,8 +152,8 @@ metadata:
     app.kubernetes.io/component: ingester
     app.kubernetes.io/instance: extra-config
     app.kubernetes.io/name: loki
-    app.kubernetes.io/version: 3.7.4
-    helm.sh/chart: loki-18.5.4
+    app.kubernetes.io/version: 3.7.8
+    helm.sh/chart: loki-18.13.7
     prometheus.io/service-monitor: 'false'
     variant: headless
   name: extra-config-loki-ingester-zone-c-headless
