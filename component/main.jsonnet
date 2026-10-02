@@ -1,48 +1,9 @@
 // main template for loki
 local kap = import 'lib/kapitan.libjsonnet';
 local kube = import 'lib/kube.libjsonnet';
+local prom = import 'lib/prom.libsonnet';
 local inv = kap.inventory();
 local com = import 'lib/commodore.libjsonnet';
-
-// `prom.libsonnet` (with `generateRules`) is provided by
-// component-openshift4-monitoring via a library alias. On non-OpenShift
-// clusters fall back to component-prometheus, which exports
-// `prometheus.libsonnet`, and reimplement the small `generateRules` helper.
-// Keep behaviour identical to the OpenShift `prom.libsonnet`: `generateRules`
-// only shapes the rules, the syn labels are stamped later by `patch-alerts`.
-local prom =
-  if std.member(inv.applications, 'openshift4-monitoring') then
-    import 'lib/prom.libsonnet'
-  else if std.member(inv.applications, 'prometheus') then
-    local p = import 'lib/prometheus.libsonnet';
-    {
-      generateRules(name, rules): p.PrometheusRule(name) {
-        spec: {
-          groups: std.filter(
-            function(g) std.length(g.rules) > 0,
-            [
-              {
-                name: group_name,
-                rules: [
-                  local rnamekey = std.splitLimit(rname, ':', 1);
-                  rules[group_name][rname] {
-                    // transform source key into "alert: alertname" or
-                    // "record: recordname"
-                    [rnamekey[0]]: rnamekey[1],
-                  }
-                  for rname in std.objectFields(rules[group_name])
-                  if rules[group_name][rname] != null
-                ],
-              }
-              for group_name in std.objectFields(rules)
-              if rules[group_name] != null
-            ]
-          ),
-        },
-      },
-    }
-  else
-    error 'component requires one of component-openshift4-monitoring or component-prometheus to be present';
 
 // The hiera parameters for the component
 local params = inv.parameters.loki;
@@ -121,6 +82,15 @@ local netpols =
     },
   } else {};
 
+local prometheusRules = prom.generateRules('loki-custom', { 'loki-custom.rules': params.alerts.additionalRules }) {
+  metadata+: {
+    namespace: params.namespace.name,
+  },
+};
+
+local has_monitoring = std.member(inv.applications, 'prometheus') || std.member(inv.applications, 'openshift4-monitoring');
+local has_alerts = std.length(params.alerts.additionalRules) > 0;
+
 // Define outputs below
 {
   [if params.namespace.create then '00_namespace']: kube.Namespace(params.namespace.name) {
@@ -130,10 +100,6 @@ local netpols =
   // Empty file to make sure the directory is created. Later used in patching alerts.
   '10_helm_loki/loki/templates/monitoring/.keep': {},
 
-  '20_prometheus_rule': prom.generateRules('loki-custom', { 'loki-custom.rules': params.alerts.additionalRules }) {
-    metadata+: {
-      namespace: params.namespace.name,
-    },
-  },
+  [if has_monitoring && has_alerts then '20_prometheus_rule']: prometheusRules,
   [if std.length(netpols) > 0 then '30_network_policies']: netpols,
 }

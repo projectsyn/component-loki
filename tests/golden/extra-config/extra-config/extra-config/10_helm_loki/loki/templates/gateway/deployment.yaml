@@ -22,7 +22,7 @@ spec:
   template:
     metadata:
       annotations:
-        checksum/config: c033b3221c75fb9b6adfe9719712f9b6a3d92aed6568b4115eb36c3aaf691395
+        checksum/config: 83d350b2361d8681ea3e3708fc909fc9818924d518633174308af18511ae2583
       labels:
         app.kubernetes.io/component: gateway
         app.kubernetes.io/instance: extra-config
@@ -106,11 +106,7 @@ spec:
             capabilities:
               drop:
                 - ALL
-            privileged: false
             readOnlyRootFilesystem: true
-            runAsGroup: 65532
-            runAsNonRoot: true
-            runAsUser: 65532
             seccompProfile:
               type: RuntimeDefault
           volumeMounts:
@@ -119,10 +115,7 @@ spec:
               subPath: access-log-exporter.yaml
       enableServiceLinks: true
       securityContext:
-        fsGroup: 101
-        runAsGroup: 101
         runAsNonRoot: true
-        runAsUser: 101
         seccompProfile:
           type: RuntimeDefault
       serviceAccountName: extra-config-loki-gateway
