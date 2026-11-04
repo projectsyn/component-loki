@@ -8,7 +8,7 @@ metadata:
     app.kubernetes.io/instance: extra-config
     app.kubernetes.io/name: loki
     app.kubernetes.io/version: 3.7.9
-    helm.sh/chart: loki-20.4.1
+    helm.sh/chart: loki-21.0.0
     name: ingester-zone-a
     rollout-group: ingester
   name: extra-config-loki-ingester-zone-a
@@ -171,7 +171,7 @@ metadata:
     app.kubernetes.io/instance: extra-config
     app.kubernetes.io/name: loki
     app.kubernetes.io/version: 3.7.9
-    helm.sh/chart: loki-20.4.1
+    helm.sh/chart: loki-21.0.0
     name: ingester-zone-b
     rollout-group: ingester
   name: extra-config-loki-ingester-zone-b
@@ -334,7 +334,7 @@ metadata:
     app.kubernetes.io/instance: extra-config
     app.kubernetes.io/name: loki
     app.kubernetes.io/version: 3.7.9
-    helm.sh/chart: loki-20.4.1
+    helm.sh/chart: loki-21.0.0
     name: ingester-zone-c
     rollout-group: ingester
   name: extra-config-loki-ingester-zone-c

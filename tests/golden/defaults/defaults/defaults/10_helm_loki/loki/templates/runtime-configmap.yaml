@@ -8,6 +8,6 @@ metadata:
     app.kubernetes.io/instance: defaults
     app.kubernetes.io/name: loki
     app.kubernetes.io/version: 3.7.9
-    helm.sh/chart: loki-20.4.1
+    helm.sh/chart: loki-21.0.0
   name: defaults-loki-runtime
   namespace: defaults
