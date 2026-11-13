@@ -5,8 +5,8 @@ metadata:
     app.kubernetes.io/component: query-frontend
     app.kubernetes.io/instance: extra-config
     app.kubernetes.io/name: loki
-    app.kubernetes.io/version: 3.7.9
-    helm.sh/chart: loki-20.4.1
+    app.kubernetes.io/version: 3.7.10
+    helm.sh/chart: loki-21.2.3
   name: extra-config-loki-query-frontend
   namespace: extra-config
 spec:
@@ -60,7 +60,7 @@ spec:
           envFrom:
             - secretRef:
                 name: extra-config-bucket-secret
-          image: dockerhub.vshn.net/grafana/loki:3.7.9
+          image: dockerhub.vshn.net/grafana/loki:3.7.10
           imagePullPolicy: IfNotPresent
           livenessProbe:
             failureThreshold: 10

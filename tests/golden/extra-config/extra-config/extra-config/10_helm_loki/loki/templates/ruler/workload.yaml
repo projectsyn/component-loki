@@ -5,8 +5,8 @@ metadata:
     app.kubernetes.io/component: ruler
     app.kubernetes.io/instance: extra-config
     app.kubernetes.io/name: loki
-    app.kubernetes.io/version: 3.7.9
-    helm.sh/chart: loki-20.4.1
+    app.kubernetes.io/version: 3.7.10
+    helm.sh/chart: loki-21.2.3
   name: extra-config-loki-ruler
   namespace: extra-config
 spec:
@@ -45,6 +45,7 @@ spec:
             - -config.expand-env=true
             - -memberlist.advertise-addr=$(POD_IP)
             - -target=ruler
+            - -distributor.zone-awareness-enabled=true
           env:
             - name: GOMEMLIMIT
               value: 652MiB
@@ -57,7 +58,7 @@ spec:
           envFrom:
             - secretRef:
                 name: extra-config-bucket-secret
-          image: dockerhub.vshn.net/grafana/loki:3.7.9
+          image: dockerhub.vshn.net/grafana/loki:3.7.10
           imagePullPolicy: IfNotPresent
           livenessProbe:
             failureThreshold: 10

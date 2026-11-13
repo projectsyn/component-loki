@@ -5,8 +5,8 @@ metadata:
     app.kubernetes.io/component: overrides-exporter
     app.kubernetes.io/instance: prometheus
     app.kubernetes.io/name: loki
-    app.kubernetes.io/version: 3.7.9
-    helm.sh/chart: loki-20.4.1
+    app.kubernetes.io/version: 3.7.10
+    helm.sh/chart: loki-21.2.3
   name: prometheus-loki-overrides-exporter
   namespace: prometheus
 spec:
@@ -55,7 +55,7 @@ spec:
           envFrom:
             - secretRef:
                 name: prometheus-bucket-secret
-          image: docker.io/grafana/loki:3.7.9
+          image: docker.io/grafana/loki:3.7.10
           imagePullPolicy: IfNotPresent
           livenessProbe:
             failureThreshold: 10
