@@ -5,8 +5,8 @@ metadata:
     app.kubernetes.io/component: ingester
     app.kubernetes.io/instance: defaults
     app.kubernetes.io/name: loki
-    app.kubernetes.io/version: 3.7.9
-    helm.sh/chart: loki-20.4.1
+    app.kubernetes.io/version: 3.7.10
+    helm.sh/chart: loki-21.2.3
   name: defaults-loki-ingester
   namespace: defaults
 spec:
@@ -59,7 +59,7 @@ spec:
           envFrom:
             - secretRef:
                 name: defaults-bucket-secret
-          image: docker.io/grafana/loki:3.7.9
+          image: docker.io/grafana/loki:3.7.10
           imagePullPolicy: IfNotPresent
           livenessProbe:
             failureThreshold: 10

@@ -6,14 +6,15 @@ metadata:
     app.kubernetes.io/component: memcached-chunks-cache
     app.kubernetes.io/instance: prometheus
     app.kubernetes.io/name: loki
-    app.kubernetes.io/version: 3.7.9
-    helm.sh/chart: loki-20.4.1
+    app.kubernetes.io/version: 3.7.10
+    helm.sh/chart: loki-21.2.3
     name: memcached-chunks-cache
   name: prometheus-loki-chunks-cache
   namespace: prometheus
 spec:
   podManagementPolicy: Parallel
   replicas: 2
+  revisionHistoryLimit: 10
   selector:
     matchLabels:
       app.kubernetes.io/component: memcached-chunks-cache

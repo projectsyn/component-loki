@@ -5,9 +5,9 @@ metadata:
     app.kubernetes.io/component: gateway
     app.kubernetes.io/instance: extra-config
     app.kubernetes.io/name: loki
-    app.kubernetes.io/version: 3.7.9
+    app.kubernetes.io/version: 3.7.10
     custom-label: my-label
-    helm.sh/chart: loki-20.4.1
+    helm.sh/chart: loki-21.2.3
   name: extra-config-loki-gateway
   namespace: extra-config
 spec:

@@ -5,8 +5,8 @@ metadata:
     app.kubernetes.io/component: gateway
     app.kubernetes.io/instance: prometheus
     app.kubernetes.io/name: loki
-    app.kubernetes.io/version: 3.7.9
-    helm.sh/chart: loki-20.4.1
+    app.kubernetes.io/version: 3.7.10
+    helm.sh/chart: loki-21.2.3
   name: prometheus-loki-gateway
   namespace: prometheus
 spec:
@@ -39,7 +39,7 @@ spec:
               topologyKey: kubernetes.io/hostname
       automountServiceAccountToken: false
       containers:
-        - image: docker.io/nginxinc/nginx-unprivileged:1.31-alpine
+        - image: docker.io/nginx/nginx-unprivileged:1.31-alpine
           imagePullPolicy: IfNotPresent
           name: nginx
           ports:
@@ -72,7 +72,7 @@ spec:
             - http://127.0.0.1:8080/stub_status
             - --preset
             - loki
-          image: ghcr.io/jkroepke/access-log-exporter:1.0.1
+          image: ghcr.io/jkroepke/access-log-exporter:1.0.2
           imagePullPolicy: IfNotPresent
           livenessProbe:
             failureThreshold: 3
