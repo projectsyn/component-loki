@@ -61,7 +61,7 @@ images:
     repository: prom/memcached-exporter
   nginx:
     registry: docker.io
-    repository: nginxinc/nginx-unprivileged
+    repository: nginx/nginx-unprivileged
 ----
 example::
 +
