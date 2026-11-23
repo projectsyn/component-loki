@@ -136,6 +136,11 @@ local images = com.makeMergeable({
     image: params.images.memcachedExporter,
   },
   gateway: {
+    // NOTE(sg): at least for Chart versions >= 18.0.0 we need to pass the
+    // nginx image config in `gateway.image`, didn't check further back.
+    image: params.images.nginx,
+    // Looks like having `gateway.nginx.image` doesn't hurt, so we keep it for
+    // backwards-compatibility for now.
     nginx: {
       image: params.images.nginx,
     },
