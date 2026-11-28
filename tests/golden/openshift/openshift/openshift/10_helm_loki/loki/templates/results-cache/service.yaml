@@ -6,8 +6,8 @@ metadata:
     app.kubernetes.io/component: memcached-results-cache
     app.kubernetes.io/instance: openshift
     app.kubernetes.io/name: loki
-    app.kubernetes.io/version: 3.7.9
-    helm.sh/chart: loki-20.4.1
+    app.kubernetes.io/version: 3.7.11
+    helm.sh/chart: loki-21.6.4
   name: openshift-loki-results-cache
   namespace: openshift
 spec:

@@ -5,8 +5,8 @@ metadata:
     app.kubernetes.io/component: query-scheduler
     app.kubernetes.io/instance: extra-config
     app.kubernetes.io/name: loki
-    app.kubernetes.io/version: 3.7.9
-    helm.sh/chart: loki-20.4.1
+    app.kubernetes.io/version: 3.7.11
+    helm.sh/chart: loki-21.6.4
   name: extra-config-loki-query-scheduler
   namespace: extra-config
 spec:
